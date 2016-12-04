@@ -1,11 +1,9 @@
 package com.surya.popularmovies;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.widget.Toast;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -16,6 +14,10 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        MoviesModel moviesModel = (MoviesModel)getIntent().getParcelableExtra(Utility.MOVIES_OBJECT);
+
+        Toast.makeText(this, moviesModel.getOverview() + moviesModel.getPoster_path(), Toast.LENGTH_SHORT).show();
+
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -24,6 +26,12 @@ public class DetailActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.container, new DetailFragment())
+//                    .commit();
+//        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

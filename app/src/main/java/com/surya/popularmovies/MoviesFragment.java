@@ -1,12 +1,13 @@
 package com.surya.popularmovies;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MoviesFragment extends Fragment {
+public class MoviesFragment extends Fragment{
 
     RecyclerView.Adapter mAdapter;
 
@@ -47,13 +48,25 @@ public class MoviesFragment extends Fragment {
         movieList = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
 
         recyclerView.setLayoutManager(layoutManager);
 
         mAdapter = new MoviesAdapter(getActivity(),movieList);
 
         recyclerView.setAdapter(mAdapter);
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                        Intent intent = new Intent(getActivity(), DetailActivity.class);
+                        intent.putExtra(Utility.MOVIES_OBJECT, movieList.get(position));
+                        startActivity(intent);
+                    }
+                })
+        );
 
         return rootView;
     }
@@ -80,6 +93,7 @@ public class MoviesFragment extends Fragment {
         moviesTask.execute(sortOrder);
 
     }
+
     public class FetchMoviesTask extends AsyncTask<String,Void,List<MoviesModel>> {
 
         private static final String LOG_TAG = "FetchMoviesTask";
@@ -93,7 +107,7 @@ public class MoviesFragment extends Fragment {
             URL url = null;
 
             final String API_KEY = "api_key";
-            Uri builtUri = Uri.parse(Utilitys.TMDB_BASE_URL).buildUpon()
+            Uri builtUri = Uri.parse(Utility.TMDB_BASE_URL).buildUpon()
                     .appendPath(params[0])
                     .appendQueryParameter(API_KEY,BuildConfig.TMDB_API_KEY)
                     .build();
@@ -127,9 +141,6 @@ public class MoviesFragment extends Fragment {
             final String POPULARITY = "popularity";
             final String VOTE_COUNT = "vote_count";
             final String VOTE_AVERAGE = "vote_average";
-
-
-            String[] responseArray = null;
 
             List<MoviesModel> results = new ArrayList<>();
 

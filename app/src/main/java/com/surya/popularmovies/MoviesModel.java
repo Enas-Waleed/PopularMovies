@@ -1,10 +1,13 @@
 package com.surya.popularmovies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Surya on 04-12-2016.
  */
 
-public class MoviesModel {
+public class MoviesModel implements Parcelable {
 
    private String poster_path;
    private String overview;
@@ -66,4 +69,58 @@ public class MoviesModel {
     public String getVote_average() {
         return vote_average;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(poster_path);
+        dest.writeString(overview);
+        dest.writeString(release_date);
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(backdrop_path);
+        dest.writeString(popularity);
+        dest.writeString(vote_count);
+        dest.writeString(vote_average);
+
+    }
+
+    @Override
+    public String toString() {
+        return poster_path + overview + release_date + id+ title+backdrop_path+popularity+vote_count+vote_average;
+    }
+    //Creator
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator(){
+
+        @Override
+        public MoviesModel createFromParcel(Parcel source) {
+            return new MoviesModel(source);
+        }
+
+        @Override
+        public MoviesModel[] newArray(int size) {
+            return new MoviesModel[size];
+        }
+
+    };
+
+    public MoviesModel(Parcel in) {
+        popularity = in.readString();
+        overview = in.readString();
+        release_date = in.readString();
+        id = in.readString();
+        title = in.readString();
+        backdrop_path = in.readString();
+        poster_path = in.readString();
+        vote_count = in.readString();
+        vote_average = in.readString();
+    }
+
+
 }

@@ -12,4 +12,23 @@
     tools:showIn="@layout/activity_detail">
 
 
+    <ImageView
+        android:id="@+id/backdrop_poster"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:src="@drawable/dummy"
+        android:contentDescription="poster" />
+
+    <ImageView
+        android:id="@+id/poster"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:src="@drawable/dummy"
+        android:layout_below="@+id/backdrop_poster"
+        android:layout_marginTop="-50dp"
+        android:layout_marginLeft="16dp"
+        />
+
+
+
 </RelativeLayout>
