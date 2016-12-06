@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MoviesFragment extends Fragment{
+public class MoviesFragment extends Fragment {
 
     RecyclerView.Adapter mAdapter;
 
@@ -40,19 +40,20 @@ public class MoviesFragment extends Fragment{
     public MoviesFragment() {
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         movieList = new ArrayList<>();
-        RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new MoviesAdapter(getActivity(),movieList);
+        mAdapter = new MoviesAdapter(getActivity(), movieList);
 
         recyclerView.setAdapter(mAdapter);
 
@@ -80,7 +81,7 @@ public class MoviesFragment extends Fragment{
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        String sortOrder = prefs.getString(getString(R.string.pref_sort_key),getString(R.string.pref_sort_popular));
+        String sortOrder = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popular));
 
         updateMoviesList(sortOrder);
 
@@ -93,7 +94,6 @@ public class MoviesFragment extends Fragment{
         moviesTask.execute(sortOrder);
 
     }
-
     public class FetchMoviesTask extends AsyncTask<String,Void,List<MoviesModel>> {
 
         private static final String LOG_TAG = "FetchMoviesTask";
@@ -141,6 +141,7 @@ public class MoviesFragment extends Fragment{
             final String POPULARITY = "popularity";
             final String VOTE_COUNT = "vote_count";
             final String VOTE_AVERAGE = "vote_average";
+            final String LANGUAGE = "original_language";
 
             List<MoviesModel> results = new ArrayList<>();
 
@@ -165,9 +166,10 @@ public class MoviesFragment extends Fragment{
                     String popularity = resultObject.getString(POPULARITY);
                     String vote_count = resultObject.getString(VOTE_COUNT);
                     String vote_average = resultObject.getString(VOTE_AVERAGE);
+                    String language = resultObject.getString(LANGUAGE);
 
                     results.add(new MoviesModel(poster_path,overview,release_date,id,title,
-                            backdrop_path,popularity,vote_count,vote_average));
+                            backdrop_path,popularity,vote_count,vote_average,language));
                 }
 
 
@@ -231,17 +233,16 @@ public class MoviesFragment extends Fragment{
         protected void onPostExecute(List<MoviesModel> result) {
 
             if (result != null)
-            for (int i = 0; i < result.size(); i++) {
-                //
+                for (int i = 0; i < result.size(); i++) {
+                    //
 
-                movieList.add(result.get(i));
+                    movieList.add(result.get(i));
 
-                mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
 
-            }
+                }
 
         }
     }
-
 
 }

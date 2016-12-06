@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Popular Movies</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_detail">DetailActivity</string>
@@ -19,5 +19,11 @@
     <string name="pref_sort_label_favourite">Favourites</string>
     <string name="pref_sort_label_upcoming">Upcoming</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="rating">Rating</string>
+    <string name="popularity">Popularity</string>
+    <string name="language">Language</string>
+
+    <string name="formatVotes"><xliff:g id="humidity">%s</xliff:g> votes </string>
+
 
 </resources>

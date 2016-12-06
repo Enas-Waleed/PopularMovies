@@ -18,11 +18,12 @@ public class MoviesModel implements Parcelable {
    private String popularity;
    private String vote_count;
    private String vote_average;
+   private String language;
 
 
     public MoviesModel(String poster_path, String overview, String release_date, String id,
                        String title, String backdrop_path, String popularity, String vote_count,
-                       String vote_average) {
+                       String vote_average,String language) {
         this.poster_path = poster_path;
         this.overview = overview;
         this.release_date = release_date;
@@ -32,6 +33,7 @@ public class MoviesModel implements Parcelable {
         this.popularity = popularity;
         this.vote_count = vote_count;
         this.vote_average = vote_average;
+        this.language = language;
     }
 
     public String getPoster_path() {
@@ -70,6 +72,10 @@ public class MoviesModel implements Parcelable {
         return vote_average;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -87,13 +93,10 @@ public class MoviesModel implements Parcelable {
         dest.writeString(popularity);
         dest.writeString(vote_count);
         dest.writeString(vote_average);
-
+        dest.writeString(language);
     }
 
-    @Override
-    public String toString() {
-        return poster_path + overview + release_date + id+ title+backdrop_path+popularity+vote_count+vote_average;
-    }
+
     //Creator
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator(){
@@ -111,15 +114,16 @@ public class MoviesModel implements Parcelable {
     };
 
     public MoviesModel(Parcel in) {
-        popularity = in.readString();
+        poster_path = in.readString();
         overview = in.readString();
         release_date = in.readString();
         id = in.readString();
         title = in.readString();
         backdrop_path = in.readString();
-        poster_path = in.readString();
+        popularity = in.readString();
         vote_count = in.readString();
         vote_average = in.readString();
+        language = in.readString();
     }
 
 

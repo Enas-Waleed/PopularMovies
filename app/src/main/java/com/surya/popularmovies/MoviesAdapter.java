@@ -65,25 +65,13 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
 
         String[] year = releaseDate.split("-");
 
-        int rating = (int) Math.round(Double.valueOf(moviesList.get(position).getPopularity()));
+        int rating = Utility.formatPopularity(moviesList.get(position).getPopularity());
 
         holder.mPopularityView.setText(String.valueOf(rating));
         holder.mReleaseView.setText(year[0]);
 
         Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + moviesList.get(position).getPoster_path()).into(holder.posterView);
 
-
-//        Toast.makeText(mContext, moviesList.get(position).getPoster_path(), Toast.LENGTH_SHORT).show();
-//        holder.posterView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Intent intent = new Intent(mContext,DetailActivity.class);
-//                intent.putExtra(Utility.MOVIES_OBJECT,moviesList.get(position));
-//                mContext.startActivity(intent);
-//
-//            }
-//        });
     }
 
     @Override
@@ -91,7 +79,4 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
         return moviesList.size();
     }
 
-    public  void  set(){
-
-    }
 }
