@@ -53,7 +53,7 @@ public class MoviesFragment extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new MoviesAdapter(getActivity(), movieList);
+        mAdapter = new MoviesAdapter(getActivity(), movieList,0);
 
         recyclerView.setAdapter(mAdapter);
 

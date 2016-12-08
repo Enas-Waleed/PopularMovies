@@ -6,6 +6,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.R.attr.bitmap;
 
@@ -41,8 +46,23 @@ public class DetailFragment extends Fragment {
         TextView movie_rating = (TextView)rootView.findViewById(R.id.movie_rating);
         TextView movie_popularity = (TextView)rootView.findViewById(R.id.movie_popularity);
         TextView movie_overview = (TextView)rootView.findViewById(R.id.movie_overview);
+        RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView);
+
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+
+        recyclerView.setLayoutManager(manager);
 
         MoviesModel moviesModel = getActivity().getIntent().getParcelableExtra(Utility.MOVIES_OBJECT);
+
+        List<MoviesModel> modelList = new ArrayList<>();
+
+        modelList.add(moviesModel);
+        modelList.add(moviesModel);
+        modelList.add(moviesModel);
+        modelList.add(moviesModel);
+
+        MoviesAdapter adapter = new MoviesAdapter(getActivity(),modelList,1);
+        recyclerView.setAdapter(adapter);
 
         Picasso.with(getActivity())
                 .load(Utility.TMDB_POSTER_URL+moviesModel.getBackdrop_path())

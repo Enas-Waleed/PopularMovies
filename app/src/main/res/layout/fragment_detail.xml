@@ -20,6 +20,8 @@
         android:scaleType="centerCrop"
         android:contentDescription="poster" />
 
+
+
     <ImageView
         android:id="@+id/poster"
         android:layout_width="130dp"
@@ -189,16 +191,42 @@
         android:layout_margin="16dp"
         android:layout_below="@+id/linear_layout"/>
 
+    <TextView
+        android:id="@+id/overviewHeading_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Overview :"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@+id/view2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
 
     <TextView
         android:id="@+id/movie_overview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view2"
+        android:layout_below="@+id/overviewHeading_textView"
         android:text="Dummy"
+        android:layout_margin="16dp"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/similar_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Similar Movies"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:textSize="16sp"/>
+        android:layout_below="@+id/movie_overview"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_margin="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/similar_textView"/>
 
 </RelativeLayout>
 </ScrollView>
