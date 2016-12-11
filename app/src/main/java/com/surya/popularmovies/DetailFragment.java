@@ -1,13 +1,17 @@
 package com.surya.popularmovies;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,34 +42,24 @@ public class DetailFragment extends Fragment {
 
         ImageView backdrop_imageView = (ImageView)rootView.findViewById(R.id.backdrop_poster);
         ImageView poster_imageView = (ImageView)rootView.findViewById(R.id.poster);
-        TextView movie_name = (TextView)rootView.findViewById(R.id.movieName);
-        TextView movie_release = (TextView)rootView.findViewById(R.id.movie_release);
+        final TextView movie_name = (TextView)rootView.findViewById(R.id.movieName);
+        final TextView movie_release = (TextView)rootView.findViewById(R.id.movie_release);
         TextView movie_genre_name = (TextView)rootView.findViewById(R.id.movie_genre_textView);
-        TextView movie_language = (TextView)rootView.findViewById(R.id.movie_language);
+        final TextView movie_language = (TextView)rootView.findViewById(R.id.movie_language);
         TextView movie_votes = (TextView)rootView.findViewById(R.id.movie_rating_textView);
-        TextView movie_rating = (TextView)rootView.findViewById(R.id.movie_rating);
-        TextView movie_popularity = (TextView)rootView.findViewById(R.id.movie_popularity);
+        final TextView movie_rating = (TextView)rootView.findViewById(R.id.movie_rating);
+        final TextView movie_popularity = (TextView)rootView.findViewById(R.id.movie_popularity);
         TextView movie_overview = (TextView)rootView.findViewById(R.id.movie_overview);
-        RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView);
 
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+        //background for the circles
+        final ImageView genreImage = (ImageView)rootView.findViewById(R.id.movie_genre_image);
 
-        recyclerView.setLayoutManager(manager);
+        final GradientDrawable ratingCircle = (GradientDrawable) movie_language.getBackground();
 
         MoviesModel moviesModel = getActivity().getIntent().getParcelableExtra(Utility.MOVIES_OBJECT);
 
-        List<MoviesModel> modelList = new ArrayList<>();
-
-        modelList.add(moviesModel);
-        modelList.add(moviesModel);
-        modelList.add(moviesModel);
-        modelList.add(moviesModel);
-
-        MoviesAdapter adapter = new MoviesAdapter(getActivity(),modelList,1);
-        recyclerView.setAdapter(adapter);
-
         Picasso.with(getActivity())
-                .load(Utility.TMDB_POSTER_URL+moviesModel.getBackdrop_path())
+                .load(Utility.TMDB_BACKDROP_POSTER_URL + moviesModel.getBackdrop_path())
                 .placeholder(R.drawable.dummy)
                 .into(backdrop_imageView);
         Picasso.with(getActivity())
@@ -78,10 +72,35 @@ public class DetailFragment extends Fragment {
         movie_release.setText(moviesModel.getRelease_date());
         movie_rating.setText(moviesModel.getVote_average());
         movie_votes.setText(getActivity().getString(R.string.formatVotes,moviesModel.getVote_count()));
-        movie_genre_name.setText("dummy");
+        movie_genre_name.setText(Utility.getGenreFromId(moviesModel.getGenre_id()));
         movie_popularity.setText(String.valueOf(Utility.formatPopularity(moviesModel.getPopularity())));
         movie_language.setText(moviesModel.getLanguage());
 
+        Bitmap bitmap = ((BitmapDrawable)poster_imageView.getDrawable()).getBitmap();;
+
+        final int color;
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener(){
+
+            @Override
+            public void onGenerated(Palette palette) {
+
+                Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+
+                if (swatch != null){
+
+                    Log.e("XXX","Hi");
+                    ratingCircle.setColor(swatch.getRgb());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        genreImage.setBackground(ratingCircle);
+                        movie_popularity.setBackground(ratingCircle);
+                        movie_language.setBackground(ratingCircle);
+                        movie_rating.setBackground(ratingCircle);
+                    }
+
+                }
+
+            }
+        });
         return rootView;
     }
 

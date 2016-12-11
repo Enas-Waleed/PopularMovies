@@ -30,6 +30,7 @@
         android:layout_below="@+id/backdrop_poster"
         android:layout_marginTop="-24dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:background="#333333"
         android:scaleType="fitXY"
         />
@@ -56,13 +57,28 @@
             android:layout_below="@+id/movieName"/>
 
 
+    <Button
+        android:id="@+id/fav_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Add to Favourites"
+        android:layout_below="@+id/poster"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="12sp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"
+        android:background="@drawable/roundbutton"/>
+
     <View
         android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#bdbdbd"
         android:layout_margin="16dp"
-        android:layout_below="@+id/poster"/>
+        android:layout_below="@+id/fav_button"/>
 
     <RelativeLayout
         android:id="@+id/linear_layout"
@@ -81,7 +97,7 @@
             android:textAlignment="center"
             android:gravity="center_vertical"
             android:layout_marginRight="16dp"
-            android:background="@drawable/magnitude_circle" />
+            android:background="@drawable/ratingcircle" />
         <ImageView
             android:id="@+id/movie_genre_image"
             android:layout_width="64dp"
@@ -90,7 +106,7 @@
             android:layout_toRightOf="@+id/movie_rating"
             android:textAlignment="center"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/magnitude_circle"
+            android:background="@drawable/ratingcircle"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_genre"
             android:layout_marginRight="16dp" />
@@ -105,7 +121,7 @@
             android:gravity="center_vertical"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/magnitude_circle"
+            android:background="@drawable/ratingcircle"
             android:layout_toRightOf="@+id/movie_genre_image" />
         <TextView
             android:id="@+id/movie_language"
@@ -113,11 +129,12 @@
             android:layout_height="64dp"
             android:text="10"
             android:layout_toRightOf="@+id/movie_popularity"
+            android:layout_toEndOf="@+id/movie_popularity"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textAlignment="center"
             android:gravity="center_vertical"
-            android:background="@drawable/magnitude_circle"/>
+            android:background="@drawable/ratingcircle"/>
 
         <TextView
             android:text="@string/rating"
@@ -207,26 +224,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/overviewHeading_textView"
-        android:text="Dummy"
         android:layout_margin="16dp"
         android:textSize="16sp"/>
-
-    <TextView
-        android:id="@+id/similar_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Similar Movies"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_below="@+id/movie_overview"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_margin="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/similar_textView"/>
 
 </RelativeLayout>
 </ScrollView>

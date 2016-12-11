@@ -93,4 +93,8 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
         return moviesList.size();
     }
 
+    public List<MoviesModel> getMoviesModel(){
+        return moviesList;
+    }
+
 }

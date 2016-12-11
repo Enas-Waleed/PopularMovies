@@ -23,7 +23,7 @@
     <string name="popularity">Popularity</string>
     <string name="language">Language</string>
 
-    <string name="formatVotes"><xliff:g id="humidity">%s</xliff:g> votes </string>
+    <string name="formatVotes"><xliff:g id="voteCount">%s</xliff:g> votes </string>
 
 
 </resources>
