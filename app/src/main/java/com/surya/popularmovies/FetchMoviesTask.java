@@ -157,7 +157,11 @@ public class FetchMoviesTask extends AsyncTask<String,Void,List<MoviesModel>> {
                 String language = resultObject.getString(LANGUAGE);
                 JSONArray genreArray = resultObject.getJSONArray(GENRE);
 
-                int genre_id = (int) genreArray.get(0);
+                int genre_id[] = new int[2 > genreArray.length() ? genreArray.length() : 2];
+
+                for (int j = 0; j < genre_id.length; j++) {
+                    genre_id[j] = genreArray.getInt(j);
+                }
 
                 results.add(new MoviesModel(poster_path,overview,release_date,id,title,
                         backdrop_path,popularity,vote_count,vote_average,language,genre_id));

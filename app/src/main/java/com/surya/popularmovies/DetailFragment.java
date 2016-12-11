@@ -72,13 +72,23 @@ public class DetailFragment extends Fragment {
         movie_release.setText(moviesModel.getRelease_date());
         movie_rating.setText(moviesModel.getVote_average());
         movie_votes.setText(getActivity().getString(R.string.formatVotes,moviesModel.getVote_count()));
-        movie_genre_name.setText(Utility.getGenreFromId(moviesModel.getGenre_id()));
+
+        String formatGenre;
+        if(moviesModel.getGenre_id().length == 1){
+
+            formatGenre = Utility.getGenreFromId((moviesModel.getGenre_id())[0]);
+
+        }else {
+            formatGenre = getActivity().getString(R.string.formatGenre,
+                    Utility.getGenreFromId((moviesModel.getGenre_id())[0]),
+                    Utility.getGenreFromId((moviesModel.getGenre_id())[1]));
+        }
+        movie_genre_name.setText(formatGenre);
         movie_popularity.setText(String.valueOf(Utility.formatPopularity(moviesModel.getPopularity())));
         movie_language.setText(moviesModel.getLanguage());
 
         Bitmap bitmap = ((BitmapDrawable)poster_imageView.getDrawable()).getBitmap();;
 
-        final int color;
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener(){
 
             @Override

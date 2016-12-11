@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MoviesFragment extends Fragment {
+public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemClickListener {
 
     MoviesAdapter mAdapter;
 
@@ -88,22 +88,11 @@ public class MoviesFragment extends Fragment {
         }
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new MoviesAdapter(getActivity(), movieList,0);
+        mAdapter = new MoviesAdapter(getActivity(), movieList,0,this);
 
         recyclerView.setAdapter(mAdapter);
 
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
 
-                        Intent intent = new Intent(getActivity(), DetailActivity.class);
-                        intent.putExtra(Utility.MOVIES_OBJECT, movieList.get(position));
-                        startActivity(intent);
-
-                    }
-                })
-        );
 
         return rootView;
     }
@@ -135,4 +124,13 @@ public class MoviesFragment extends Fragment {
 
     }
 
+    @Override
+    public void onListItemClick(int position) {
+
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra(Utility.MOVIES_OBJECT, movieList.get(position));
+        startActivity(intent);
+
+
+    }
 }

@@ -13,7 +13,7 @@ public class MoviesModel implements Parcelable {
    private String overview;
    private String release_date;
    private String id;
-   private int genre_id;
+   private int genre_id[];
    private String title;
    private String backdrop_path;
    private String popularity;
@@ -24,7 +24,7 @@ public class MoviesModel implements Parcelable {
 
     public MoviesModel(String poster_path, String overview, String release_date, String id,
                        String title, String backdrop_path, String popularity, String vote_count,
-                       String vote_average, String language, int genre_id) {
+                       String vote_average, String language, int[] genre_id) {
         this.poster_path = poster_path;
         this.overview = overview;
         this.release_date = release_date;
@@ -78,7 +78,7 @@ public class MoviesModel implements Parcelable {
         return language;
     }
 
-    public int getGenre_id() {
+    public int[] getGenre_id() {
         return (genre_id);
     }
 
@@ -100,7 +100,7 @@ public class MoviesModel implements Parcelable {
         dest.writeString(vote_count);
         dest.writeString(vote_average);
         dest.writeString(language);
-        dest.writeInt(genre_id);
+        dest.writeIntArray(genre_id);
     }
 
 
@@ -131,7 +131,7 @@ public class MoviesModel implements Parcelable {
         vote_count = in.readString();
         vote_average = in.readString();
         language = in.readString();
-        genre_id = in.readInt();
+        genre_id = in.createIntArray();
     }
 
 

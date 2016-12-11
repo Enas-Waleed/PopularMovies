@@ -27,9 +27,14 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
 
     private List<MoviesModel> moviesList;
     private Context mContext;
-    private static int id;
+    private int id;
+    final private ListItemClickListener mOnClickListener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public interface ListItemClickListener{
+        void onListItemClick(int position);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView mRatingView;
         TextView mPopularityView;
         TextView mReleaseView;
@@ -37,6 +42,7 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
         CardView cardView;
         public ViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             mReleaseView = (TextView)view.findViewById(R.id.list_item_year);
             mPopularityView = (TextView)view.findViewById(R.id.list_item_popularity);
             mRatingView = (TextView)view.findViewById(R.id.list_item_rating);
@@ -51,13 +57,21 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
                 cardView.setLayoutParams(layoutParams);
             }
         }
+
+
+        @Override
+        public void onClick(View v) {
+            int clickPosition = getAdapterPosition();
+            mOnClickListener.onListItemClick(clickPosition);
+        }
     }
 
-    public MoviesAdapter(Context context, List<MoviesModel> movieList,int id) {
+    public MoviesAdapter(Context context, List<MoviesModel> movieList,int id,ListItemClickListener clickListener) {
 
         this.moviesList = movieList;
         this.mContext = context;
         this.id = id;
+        this.mOnClickListener = clickListener;
     }
 
     @Override

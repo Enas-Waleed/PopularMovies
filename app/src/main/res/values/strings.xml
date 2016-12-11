@@ -24,6 +24,10 @@
     <string name="language">Language</string>
 
     <string name="formatVotes"><xliff:g id="voteCount">%s</xliff:g> votes </string>
+    <string name="formatGenre">
+        <xliff:g id="genre">%s</xliff:g> &amp;
+        <xliff:g id = "genre2" >%s</xliff:g>
+    </string>
 
 
 </resources>
