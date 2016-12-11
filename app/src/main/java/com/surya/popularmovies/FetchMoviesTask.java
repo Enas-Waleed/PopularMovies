@@ -178,6 +178,7 @@ public class FetchMoviesTask extends AsyncTask<String,Void,List<MoviesModel>> {
         if (result != null) {
 
             List<MoviesModel> movieList = moviesAdapter.getMoviesModel();
+            movieList.clear();
             for (int i = 0; i < result.size(); i++) {
                 //
 

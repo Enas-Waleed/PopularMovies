@@ -90,9 +90,6 @@ public class MoviesFragment extends Fragment {
 
         mAdapter = new MoviesAdapter(getActivity(), movieList,0);
 
-        if (movieList.size() != 0)
-        mAdapter.notifyDataSetChanged();
-
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnItemTouchListener(
@@ -123,11 +120,11 @@ public class MoviesFragment extends Fragment {
         String sortOrder = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popular));
 
         if (!lastSortingOrder.equals(sortOrder)){
-            Log.e("XXX","onStart" + "sortorder not equal");
+            Log.e("XXX","onStart" + " sortorder not equal");
             movieList.clear();
-            updateMoviesList(sortOrder);
             lastSortingOrder = sortOrder;
         }
+        updateMoviesList(sortOrder);
     }
 
     private void updateMoviesList(String sortOrder) {
@@ -137,6 +134,5 @@ public class MoviesFragment extends Fragment {
         moviesTask.execute(sortOrder);
 
     }
-
 
 }
