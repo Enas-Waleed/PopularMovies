@@ -23,11 +23,21 @@
     <string name="popularity">Popularity</string>
     <string name="language">Language</string>
 
+    <!--formatting votes count-->
     <string name="formatVotes"><xliff:g id="voteCount">%s</xliff:g> votes </string>
+
+    <!--formatting genre types-->
     <string name="formatGenre">
         <xliff:g id="genre">%s</xliff:g> &amp;
         <xliff:g id = "genre2" >%s</xliff:g>
     </string>
+
+    <!--dummy data-->
+    <string name="add_to_favourites">Add to Favourites</string>
+    <string name="imageview">imageView</string>
+    <string name="popularity_value">10</string>
+    <string name="dummygenre">DummyGenre</string>
+    <string name="overview">Overview :</string>
 
 
 </resources>

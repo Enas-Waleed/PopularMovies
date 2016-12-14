@@ -1,4 +1,4 @@
-package com.surya.popularmovies;
+package com.surya.popularmovies.Utils;
 
 /**
  * Created by Surya on 04-12-2016.

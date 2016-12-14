@@ -1,31 +1,21 @@
 package com.surya.popularmovies;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.R.attr.bitmap;
+import com.surya.popularmovies.Utils.Utility;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -74,11 +64,14 @@ public class DetailFragment extends Fragment {
         movie_votes.setText(getActivity().getString(R.string.formatVotes,moviesModel.getVote_count()));
 
         String formatGenre;
+
+        //format  genre of only one type
         if(moviesModel.getGenre_id().length == 1){
 
             formatGenre = Utility.getGenreFromId((moviesModel.getGenre_id())[0]);
 
         }else {
+            //format  genre of only two type
             formatGenre = getActivity().getString(R.string.formatGenre,
                     Utility.getGenreFromId((moviesModel.getGenre_id())[0]),
                     Utility.getGenreFromId((moviesModel.getGenre_id())[1]));
@@ -97,8 +90,6 @@ public class DetailFragment extends Fragment {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
 
                 if (swatch != null){
-
-                    Log.e("XXX","Hi");
                     ratingCircle.setColor(swatch.getRgb());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         genreImage.setBackground(ratingCircle);
@@ -106,7 +97,6 @@ public class DetailFragment extends Fragment {
                         movie_language.setBackground(ratingCircle);
                         movie_rating.setBackground(ratingCircle);
                     }
-
                 }
 
             }

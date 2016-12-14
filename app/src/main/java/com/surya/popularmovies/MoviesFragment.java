@@ -2,36 +2,20 @@ package com.surya.popularmovies;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.surya.popularmovies.Utils.Utility;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -53,10 +37,10 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null ||!savedInstanceState.containsKey(Utility.MOVIES_ARRAY)){
-            Log.e("XXX","onCreate"  + "null");
+//            Log.e("XXX","onCreate"  + "null");
             movieList = new ArrayList<>();
         }else {
-            Log.e("XXX","onCreate"  + "not null");
+//            Log.e("XXX","onCreate"  + "not null");
               movieList = savedInstanceState.getParcelableArrayList(Utility.MOVIES_ARRAY);
       }
 
@@ -65,7 +49,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        Log.e("XXX","onSavedInstance");
+//        Log.e("XXX","onSavedInstance");
         outState.putParcelableArrayList(Utility.MOVIES_ARRAY,movieList);
 
         super.onSaveInstanceState(outState);
@@ -77,7 +61,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        Log.e("XXX","onCreateView");
+//        Log.e("XXX","onCreateView");
 
         GridLayoutManager layoutManager;
 
@@ -103,13 +87,13 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     public void onStart() {
         super.onStart();
 
-        Log.e("XXX","onStart");
+//        Log.e("XXX","onStart");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         String sortOrder = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popular));
 
         if (!lastSortingOrder.equals(sortOrder)){
-            Log.e("XXX","onStart" + " sortorder not equal");
+//            Log.e("XXX","onStart" + " sortorder not equal");
             movieList.clear();
             lastSortingOrder = sortOrder;
         }

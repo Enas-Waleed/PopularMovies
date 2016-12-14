@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:id="@+id/scrollView"
+<ScrollView
+    android:id="@+id/scrollView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,7 +19,7 @@
         android:layout_height="250dp"
         android:src="@drawable/dummy"
         android:scaleType="centerCrop"
-        android:contentDescription="poster" />
+        android:contentDescription="@string/imageview" />
 
 
 
@@ -31,37 +32,38 @@
         android:layout_marginTop="-24dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:background="#333333"
         android:scaleType="fitXY"
-        />
+        android:contentDescription="@string/imageview" />
 
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/poster"
+        android:layout_toEndOf="@+id/poster"
         android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:id="@+id/movieName"
         android:layout_below="@+id/backdrop_poster"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/poster"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:id="@+id/movie_release"
-            android:layout_below="@+id/movieName"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/poster"
+        android:layout_toEndOf="@+id/poster"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/movie_release"
+        android:layout_below="@+id/movieName"/>
 
 
     <Button
         android:id="@+id/fav_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="Add to Favourites"
+        android:text="@string/add_to_favourites"
         android:layout_below="@+id/poster"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
@@ -92,29 +94,31 @@
             android:id="@+id/movie_rating"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:text="10"
             android:textColor="@android:color/white"
             android:textAlignment="center"
             android:gravity="center_vertical"
             android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/ratingcircle" />
+
         <ImageView
             android:id="@+id/movie_genre_image"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:text="10"
             android:layout_toRightOf="@+id/movie_rating"
+            android:layout_toEndOf="@+id/movie_rating"
             android:textAlignment="center"
             android:layout_gravity="center_vertical"
             android:background="@drawable/ratingcircle"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_genre"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="16dp"
+            android:contentDescription="@string/imageview" />
         <TextView
             android:id="@+id/movie_popularity"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:text="10"
+            android:text="@string/popularity_value"
             android:layout_toEndOf="@+id/movie_genre_image"
             android:textColor="@android:color/white"
             android:textAlignment="center"
@@ -127,7 +131,7 @@
             android:id="@+id/movie_language"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:text="10"
+            android:text="@string/popularity_value"
             android:layout_toRightOf="@+id/movie_popularity"
             android:layout_toEndOf="@+id/movie_popularity"
             android:textColor="@android:color/white"
@@ -150,9 +154,8 @@
             android:layout_alignLeft="@+id/movie_rating"
             android:layout_alignStart="@+id/movie_rating" />
 
-
         <TextView
-            android:text="TextView"
+            android:text="@string/dummygenre"
             android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -212,7 +215,7 @@
         android:id="@+id/overviewHeading_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Overview :"
+        android:text="@string/overview"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
         android:layout_below="@+id/view2"

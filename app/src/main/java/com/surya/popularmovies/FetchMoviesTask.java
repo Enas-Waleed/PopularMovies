@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.surya.popularmovies.Utils.Utility;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
