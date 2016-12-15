@@ -99,7 +99,7 @@
             android:gravity="center_vertical"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/ratingcircle" />
+            android:background="@drawable/circle" />
 
         <ImageView
             android:id="@+id/movie_genre_image"
@@ -109,7 +109,7 @@
             android:layout_toEndOf="@+id/movie_rating"
             android:textAlignment="center"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/ratingcircle"
+            android:background="@drawable/circle"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_genre"
             android:layout_marginRight="16dp"
@@ -125,7 +125,7 @@
             android:gravity="center_vertical"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/ratingcircle"
+            android:background="@drawable/circle"
             android:layout_toRightOf="@+id/movie_genre_image" />
         <TextView
             android:id="@+id/movie_language"
@@ -138,7 +138,7 @@
             android:textSize="16sp"
             android:textAlignment="center"
             android:gravity="center_vertical"
-            android:background="@drawable/ratingcircle"/>
+            android:background="@drawable/circle"/>
 
         <TextView
             android:text="@string/rating"
