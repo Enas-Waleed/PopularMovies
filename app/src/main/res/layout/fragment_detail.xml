@@ -230,5 +230,53 @@
         android:layout_margin="16dp"
         android:textSize="16sp"/>
 
+
+    <TextView
+        android:id="@+id/trailer_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/movie_overview"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:text="@string/trailers"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/trailer_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trailer_heading"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:scrollbarSize="4dp"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbars="horizontal"/>
+
+
+    <TextView
+        android:id="@+id/review_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trailer_recyclerview"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:text="@string/reviews"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/review_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_below="@+id/review_heading"
+        android:scrollbarSize="4dp"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbars="horizontal"/>
+
+
 </RelativeLayout>
 </ScrollView>

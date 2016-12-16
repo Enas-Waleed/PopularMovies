@@ -1,5 +1,12 @@
 package com.surya.popularmovies.Utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
  * Created by Surya on 04-12-2016.
  */
@@ -80,6 +87,55 @@ public class Utility {
 
 
         return null;
+    }
+
+    //helper methods for making http connection
+    public static String makeHttpRequest(URL url) throws IOException {
+
+        String jsonResponse = null;
+
+        HttpURLConnection urlConnection = null;
+
+        InputStream inputStream = null;
+
+        urlConnection = (HttpURLConnection) url.openConnection();
+
+        urlConnection.setReadTimeout(10000 /* milliseconds */);
+        urlConnection.setConnectTimeout(15000 /* milliseconds */);
+        urlConnection.setRequestMethod("GET");
+        urlConnection.connect();
+
+        if (urlConnection.getResponseCode() == 200){
+
+            inputStream = urlConnection.getInputStream();
+
+            jsonResponse = readFromStream(inputStream);
+        }
+
+        urlConnection.disconnect();
+        if (inputStream != null)
+            inputStream.close();
+
+        return jsonResponse;
+    }
+
+    private static String readFromStream(InputStream inputStream) throws IOException {
+
+        StringBuilder output = new StringBuilder();
+
+        InputStreamReader streamReader = new InputStreamReader(inputStream);
+
+        BufferedReader reader = new BufferedReader(streamReader);
+
+        String line = reader.readLine();
+
+        while (line != null){
+            output.append(line).append("\n");
+            line = reader.readLine();
+        }
+
+//        Log.e(LOG_TAG,output.toString());
+        return output.toString();
     }
 
 

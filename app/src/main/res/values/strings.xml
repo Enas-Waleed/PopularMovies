@@ -40,6 +40,8 @@
     <string name="overview">Overview :</string>
     <string name="pref_isFirst_key">launch_check</string>
     <string name="my_preferences">PREFERENCES</string>
+    <string name="trailers">Trailers :</string>
+    <string name="reviews">Reviews :</string>
 
 
 </resources>

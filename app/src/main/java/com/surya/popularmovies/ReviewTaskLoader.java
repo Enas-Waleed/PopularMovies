@@ -5,17 +5,14 @@ import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
+import com.surya.popularmovies.MoviesModel;
 import com.surya.popularmovies.Utils.Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,35 +24,39 @@ import static com.surya.popularmovies.Utils.Utility.makeHttpRequest;
  * Created by Surya on 16-12-2016.
  */
 
-public class MovieTaskLoader extends AsyncTaskLoader {
+public class ReviewTaskLoader extends AsyncTaskLoader{
+    private static final String LOG_TAG = ReviewTaskLoader.class.getSimpleName();
 
-    private static final String LOG_TAG = MovieTaskLoader.class.getSimpleName();
-    private String sortOrder;
+//    private MoviesModel
+    private String id;
 
-    public MovieTaskLoader(Context context,String sortOrder) {
+    public ReviewTaskLoader(Context context, String id) {
         super(context);
-
-        this.sortOrder = sortOrder;
-
+        this.id = id;
     }
 
     @Override
-    protected void onStartLoading() {
-
+    public void onStartLoading() {
         forceLoad();
     }
 
     @Override
-    public List<MoviesModel> loadInBackground() {
+    public Object loadInBackground() {
 
+        Log.e("xxxx","load in back");
 
         URL url = null;
 
         final String API_KEY = "api_key";
+        String APPEND_PATH = "append_to_response";
+        String TRAILER_REVIEW = "videos,reviews";
         Uri builtUri = Uri.parse(Utility.TMDB_BASE_URL).buildUpon()
-                .appendPath(sortOrder)
+                .appendPath(id)
                 .appendQueryParameter(API_KEY,BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(APPEND_PATH,TRAILER_REVIEW)
                 .build();
+
+        Log.e("xxx",builtUri.toString());
 
         //create a url object
         try {
@@ -71,11 +72,14 @@ public class MovieTaskLoader extends AsyncTaskLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return extractFromJson(jsonResponse);
 
+        extractFromJson(jsonResponse);
+
+        Log.e("xxxx",jsonResponse);
+        return null;
     }
 
-    private List<MoviesModel> extractFromJson(String jsonResponse) {
+    private void extractFromJson(String jsonResponse) {
 
         final String RESULTS = "results";
         final String POSTER_PATH = "poster_path";
@@ -89,41 +93,45 @@ public class MovieTaskLoader extends AsyncTaskLoader {
         final String VOTE_AVERAGE = "vote_average";
         final String LANGUAGE = "original_language";
         final String GENRE = "genre_ids";
+        final String VIDEOS = "videos";
+        final String REVIEWS = "reviews";
+        final String KEY = "key";
+        final String AUTHOR = "author";
+        final String CONTENT = "content";
+        final String LINK = "url";
 
         List<MoviesModel> results = new ArrayList<>();
 
         if (jsonResponse == null)
-            return null;
+            return ;
 
         try {
             JSONObject response = new JSONObject(jsonResponse);
 
-            JSONArray resultsArray = response.getJSONArray(RESULTS);
+            //fetch trailers
+            JSONObject videosObject = response.getJSONObject(VIDEOS);
 
-            for (int i = 0; i < resultsArray.length(); i++) {
+            JSONArray trailersArray = videosObject.getJSONArray(RESULTS);
 
-                JSONObject resultObject = resultsArray.getJSONObject(i);
+            for (int p = 0; p < trailersArray.length(); p++) {
 
-                String poster_path = resultObject.getString(POSTER_PATH);
-                String overview = resultObject.getString(OVERVIEW);
-                String release_date = resultObject.getString(RELEASE_DATE);
-                String id = resultObject.getString(ID);
-                String title = resultObject.getString(TITLE);
-                String backdrop_path = resultObject.getString(BACKDROP_PATH);
-                String popularity = resultObject.getString(POPULARITY);
-                String vote_count = resultObject.getString(VOTE_COUNT);
-                String vote_average = resultObject.getString(VOTE_AVERAGE);
-                String language = resultObject.getString(LANGUAGE);
-                JSONArray genreArray = resultObject.getJSONArray(GENRE);
+                String trailerId = trailersArray.getJSONObject(p).getString(KEY);
+                Log.e("xxxxxxx",trailerId);
 
-                int genre_id[] = new int[2 > genreArray.length() ? genreArray.length() : 2];
+            }
 
-                for (int j = 0; j < genre_id.length; j++) {
-                    genre_id[j] = genreArray.getInt(j);
-                }
+            //fetch reviews
+            JSONObject reviewsObject = response.getJSONObject(REVIEWS);
 
-                results.add(new MoviesModel(poster_path,overview,release_date,id,title,
-                        backdrop_path,popularity,vote_count,vote_average,language,genre_id));
+            JSONArray reviewsArray = reviewsObject.getJSONArray(RESULTS);
+
+            for (int q = 0; q < reviewsArray.length(); q++) {
+
+                String username = reviewsArray.getJSONObject(q).getString(AUTHOR);
+                String content = reviewsArray.getJSONObject(q).getString(CONTENT);
+                String url_link = reviewsArray.getJSONObject(q).getString(LINK);
+                Log.e("xxxxxxx",username);
+
             }
 
 
@@ -131,6 +139,6 @@ public class MovieTaskLoader extends AsyncTaskLoader {
             e.printStackTrace();
         }
 
-        return results;
+
     }
 }
