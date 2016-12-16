@@ -2,7 +2,7 @@ package com.surya.popularmovies;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.surya.popularmovies.Utils.Utility;
@@ -22,32 +22,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Surya on 08-12-2016.
+ * Created by Surya on 16-12-2016.
  */
-public class FetchMoviesTask extends AsyncTask<String,Void,List<MoviesModel>> {
 
-    private static final String LOG_TAG = "FetchMoviesTask";
-    private MoviesAdapter moviesAdapter;
-    private Context mContext;
+public class MovieTaskLoader extends AsyncTaskLoader {
 
-    public FetchMoviesTask(Context context, MoviesAdapter mAdapter) {
+    private static final String LOG_TAG = MovieTaskLoader.class.getSimpleName();
+    private String sortOrder;
 
-        this.mContext = context;
-        this.moviesAdapter = mAdapter;
+    public MovieTaskLoader(Context context,String sortOrder) {
+        super(context);
+
+        this.sortOrder = sortOrder;
 
     }
 
     @Override
-    protected List<MoviesModel> doInBackground(String... params) {
+    protected void onStartLoading() {
 
-        if (params.length == 0)
-            return null;
+        forceLoad();
+    }
+
+    @Override
+    public List<MoviesModel> loadInBackground() {
+
 
         URL url = null;
 
         final String API_KEY = "api_key";
         Uri builtUri = Uri.parse(Utility.TMDB_BASE_URL).buildUpon()
-                .appendPath(params[0])
+                .appendPath(sortOrder)
                 .appendQueryParameter(API_KEY,BuildConfig.TMDB_API_KEY)
                 .build();
 
@@ -66,6 +70,7 @@ public class FetchMoviesTask extends AsyncTask<String,Void,List<MoviesModel>> {
             e.printStackTrace();
         }
         return extractFromJson(jsonResponse);
+
     }
 
 
@@ -175,25 +180,5 @@ public class FetchMoviesTask extends AsyncTask<String,Void,List<MoviesModel>> {
         }
 
         return results;
-    }
-
-
-    @Override
-    protected void onPostExecute(List<MoviesModel> result) {
-
-        if (result != null) {
-
-            List<MoviesModel> movieList = moviesAdapter.getMoviesModel();
-            movieList.clear();
-            for (int i = 0; i < result.size(); i++) {
-                //
-
-                movieList.add(result.get(i));
-
-                moviesAdapter.notifyDataSetChanged();
-//                Log.e(LOG_TAG, movieList.get(i).getTitle());
-            }
-        }
-
     }
 }

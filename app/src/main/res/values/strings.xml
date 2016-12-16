@@ -38,6 +38,8 @@
     <string name="popularity_value">10</string>
     <string name="dummygenre">DummyGenre</string>
     <string name="overview">Overview :</string>
+    <string name="pref_isFirst_key">launch_check</string>
+    <string name="my_preferences">PREFERENCES</string>
 
 
 </resources>
