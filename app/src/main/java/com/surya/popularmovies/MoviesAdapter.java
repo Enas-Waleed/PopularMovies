@@ -1,8 +1,10 @@
 package com.surya.popularmovies;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.surya.popularmovies.Utils.Utility;
+import com.surya.popularmovies.data.MoviesContract;
 
 import java.util.List;
 
@@ -25,6 +28,14 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
     private Context mContext;
     private int id;
     final private ListItemClickListener mOnClickListener;
+    private Cursor mCursor;
+
+    private int COL_POSTER_PATH = 0;
+    private int COL_VOTE_AVERAGE = 1;
+    private int COL_RELEASE_DATE = 2;
+    private int COL_POPULARITY = 3;
+
+
 
     public interface ListItemClickListener{
         void onListItemClick(int position);
@@ -62,12 +73,13 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
         }
     }
 
-    public MoviesAdapter(Context context, List<MoviesModel> movieList,int id,ListItemClickListener clickListener) {
+    public MoviesAdapter(Context context, int id, ListItemClickListener clickListener, Cursor cursor) {
 
-        this.moviesList = movieList;
         this.mContext = context;
         this.id = id;
         this.mOnClickListener = clickListener;
+        mCursor = cursor;
+
     }
 
     @Override
@@ -83,28 +95,34 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        (holder.mRatingView).setText(moviesList.get(position).getVote_average() + "/10");
+        if (!mCursor.moveToPosition(position))
+            return;
 
-        String releaseDate = moviesList.get(position).getRelease_date();
+        (holder.mRatingView).setText(mCursor.getString(COL_VOTE_AVERAGE) + "/10");
+
+        String releaseDate = mCursor.getString(COL_RELEASE_DATE);
 
         String[] year = releaseDate.split("-");
 
-        int rating = Utility.formatPopularity(moviesList.get(position).getPopularity());
+        int rating = Utility.formatPopularity(mCursor.getString(COL_POPULARITY));
 
         holder.mPopularityView.setText(String.valueOf(rating));
         holder.mReleaseView.setText(year[0]);
 
-        Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + moviesList.get(position).getPoster_path()).into(holder.posterView);
+        Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + mCursor.getString(COL_POSTER_PATH)).into(holder.posterView);
+
+
+//        Log.e("XXX",mCursor.getColumnIndex(MoviesContract.CategoryEntry.COL_RELEASE_DATE) + "release date");
+//        Log.e("XXX",mCursor.getColumnIndex(MoviesContract.CategoryEntry.COL_VOTE_AVERAGE) + "vote average");
+//        Log.e("XXX",mCursor.getColumnIndex(MoviesContract.CategoryEntry.COL_POPULARITY) + "popu");
+//        Log.e("XXX",mCursor.getColumnIndex(MoviesContract.CategoryEntry.COL_POSTER_PATH) + "postrer");
+
 
     }
 
     @Override
     public int getItemCount() {
-        return moviesList.size();
-    }
-
-    public List<MoviesModel> getMoviesModel(){
-        return moviesList;
+        return mCursor.getCount();
     }
 
 }

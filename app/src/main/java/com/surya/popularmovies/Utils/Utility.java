@@ -1,5 +1,11 @@
 package com.surya.popularmovies.Utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.surya.popularmovies.R;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -136,6 +142,14 @@ public class Utility {
 
 //        Log.e(LOG_TAG,output.toString());
         return output.toString();
+    }
+
+    public static String getSortOrder(Context context){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        return prefs.getString(context.getString(R.string.pref_sort_key), context.getString(R.string.pref_sort_popular));
+
     }
 
 

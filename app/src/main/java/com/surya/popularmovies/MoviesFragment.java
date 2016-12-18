@@ -3,6 +3,8 @@ package com.surya.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
@@ -20,9 +22,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.surya.popularmovies.Utils.Utility;
+import com.surya.popularmovies.data.MoviesContract;
+import com.surya.popularmovies.data.MoviesDBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.internal.Util;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -36,6 +42,12 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     ArrayList<MoviesModel> movieList;
 
     private static String lastSortingOrder = "dummy";
+
+    /*private final String[] projection = {MoviesContract.CategoryEntry.COL_POSTER_PATH,
+                                         MoviesContract.CategoryEntry.COL_VOTE_AVERAGE,
+                                         MoviesContract.CategoryEntry.COL_RELEASE_DATE,
+                                         MoviesContract.CategoryEntry.COL_POPULARITY};
+                                         */
 
     public MoviesFragment() {
     }
@@ -75,7 +87,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-//        Log.e("XXX","onCreateView");
+        Log.e("XXX","onCreateView");
 
         GridLayoutManager layoutManager;
 
@@ -86,11 +98,28 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         }
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new MoviesAdapter(getActivity(), movieList,0,this);
+        SQLiteDatabase db = (new MoviesDBHelper(getActivity())).getReadableDatabase();
+
+
+        /*String selection = MoviesContract.FavouriteEntry.COL_CATEGORY + " = ?";
+        String[] selectionArgs = {Utility.getSortOrder(getActivity())};
+
+        Cursor cursor = db.query(MoviesContract.FavouriteEntry.TABLE_NAME,
+                                    projection,
+                                    selection,
+                                    selectionArgs,
+                                    null,
+                                    null,
+                                    null);
+                                    */
+
+
+//        mAdapter = new MoviesAdapter(getActivity(),0,this,cursor);
+
+
+
 
         recyclerView.setAdapter(mAdapter);
-
-
 
         return rootView;
     }
@@ -101,10 +130,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     public void onStart() {
         super.onStart();
 
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        String sortOrder = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popular));
+        String sortOrder = Utility.getSortOrder(getActivity());
 
         if (!lastSortingOrder.equals(sortOrder)){
             movieList.clear();
@@ -119,19 +145,16 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     @Override
     public void onListItemClick(int position) {
 
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        /*Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra(Utility.MOVIES_OBJECT, movieList.get(position));
-        startActivity(intent);
+        startActivity(intent);*/
 
     }
 
     @Override
     public Loader<List<MoviesModel>> onCreateLoader(int id, Bundle args) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        String sortOrder = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popular));
-
-        return new MovieTaskLoader(getActivity(),sortOrder);
+        return new MovieTaskLoader(getActivity(),Utility.getSortOrder(getActivity()));
     }
 
     @Override
@@ -139,7 +162,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
         if (data != null) {
 
-            List<MoviesModel> movieList = mAdapter.getMoviesModel();
             movieList.clear();
             for (int i = 0; i < data.size(); i++) {
                 movieList.add(data.get(i));

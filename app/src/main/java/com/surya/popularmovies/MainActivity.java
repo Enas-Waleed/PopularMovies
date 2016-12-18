@@ -2,6 +2,8 @@ package com.surya.popularmovies;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.surya.popularmovies.Utils.TestUtlis;
+import com.surya.popularmovies.data.MoviesContract;
+import com.surya.popularmovies.data.MoviesDBHelper;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -22,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+//        Log.e("xxx","jb");
+
+//        TestUtlis.insertToDb(MainActivity.this);
 
     }
 

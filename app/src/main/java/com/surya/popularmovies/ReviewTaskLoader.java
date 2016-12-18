@@ -43,8 +43,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
     @Override
     public Object loadInBackground() {
 
-        Log.e("xxxx","load in back");
-
         URL url = null;
 
         final String API_KEY = "api_key";
@@ -116,8 +114,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
             for (int p = 0; p < trailersArray.length(); p++) {
 
                 String trailerId = trailersArray.getJSONObject(p).getString(KEY);
-                Log.e("xxxxxxx",trailerId);
-
             }
 
             //fetch reviews
@@ -130,8 +126,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
                 String username = reviewsArray.getJSONObject(q).getString(AUTHOR);
                 String content = reviewsArray.getJSONObject(q).getString(CONTENT);
                 String url_link = reviewsArray.getJSONObject(q).getString(LINK);
-                Log.e("xxxxxxx",username);
-
             }
 
 

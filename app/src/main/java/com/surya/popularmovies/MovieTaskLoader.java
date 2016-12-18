@@ -1,11 +1,16 @@
 package com.surya.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.surya.popularmovies.Utils.Utility;
+import com.surya.popularmovies.data.MoviesContract;
+import com.surya.popularmovies.data.MoviesDBHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,10 +36,12 @@ public class MovieTaskLoader extends AsyncTaskLoader {
 
     private static final String LOG_TAG = MovieTaskLoader.class.getSimpleName();
     private String sortOrder;
+    private Context mContext;
 
     public MovieTaskLoader(Context context,String sortOrder) {
         super(context);
 
+        this.mContext = context;
         this.sortOrder = sortOrder;
 
     }
@@ -91,6 +98,9 @@ public class MovieTaskLoader extends AsyncTaskLoader {
         final String GENRE = "genre_ids";
 
         List<MoviesModel> results = new ArrayList<>();
+        ContentValues contentValues = new ContentValues();
+
+        SQLiteDatabase db = (new MoviesDBHelper(mContext)).getWritableDatabase();
 
         if (jsonResponse == null)
             return null;
@@ -122,8 +132,43 @@ public class MovieTaskLoader extends AsyncTaskLoader {
                     genre_id[j] = genreArray.getInt(j);
                 }
 
+                String formatGenre = "";
+                //format  genre of only one type
+                if (genre_id.length > 0) {
+                    if (genre_id.length == 1) {
+
+                        formatGenre = Utility.getGenreFromId(genre_id[0]);
+
+                    } else {
+                        //format  genre of only two type
+                        formatGenre = mContext.getString(R.string.formatGenre,
+                                Utility.getGenreFromId(genre_id[0]),
+                                Utility.getGenreFromId(genre_id[1]));
+                    }
+                }
+
                 results.add(new MoviesModel(poster_path,overview,release_date,id,title,
                         backdrop_path,popularity,vote_count,vote_average,language,genre_id));
+
+                contentValues.put(MoviesContract.CategoryEntry.COL_CATEGORY,sortOrder);
+                contentValues.put(MoviesContract.CategoryEntry.COL_MOVIE_ID,id);
+                contentValues.put(MoviesContract.CategoryEntry.COL_POSTER_PATH,poster_path);
+                contentValues.put(MoviesContract.CategoryEntry.COL_VOTE_AVERAGE,vote_average);
+                contentValues.put(MoviesContract.CategoryEntry.COL_RELEASE_DATE,release_date);
+                contentValues.put(MoviesContract.CategoryEntry.COL_POPULARITY,popularity);
+                contentValues.put(MoviesContract.CategoryEntry.COL_TITLE,title);
+                contentValues.put(MoviesContract.CategoryEntry.COL_BACKDROP,backdrop_path);
+                contentValues.put(MoviesContract.CategoryEntry.COL_VOTE_COUNT,vote_count);
+                contentValues.put(MoviesContract.CategoryEntry.COL_GENRE,formatGenre);
+                contentValues.put(MoviesContract.CategoryEntry.COL_LANGUAGE,language);
+                contentValues.put(MoviesContract.CategoryEntry.COL_SYNOPSIS,overview);
+
+
+
+                long rowId = db.insert(MoviesContract.CategoryEntry.TABLE_NAME,null,contentValues);
+
+//                Toast.makeText(mContext, rowId + "inserted", Toast.LENGTH_SHORT).show();
+
             }
 
 
