@@ -38,6 +38,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.surya.popularmovies.MainActivity" />
         </activity>
+
+
+        <provider
+            android:authorities="com.surya.popularmovies"
+            android:name=".data.MoviesProvider"
+            android:exported="false"
+            android:syncable="true" />
+
+
     </application>
 
 </manifest>

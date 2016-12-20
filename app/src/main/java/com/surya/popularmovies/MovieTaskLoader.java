@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import com.surya.popularmovies.Utils.Utility;
@@ -21,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import static com.surya.popularmovies.Utils.Utility.makeHttpRequest;
 
@@ -49,7 +51,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
     }
 
     @Override
-    public List<MoviesModel> loadInBackground() {
+    public Cursor loadInBackground() {
 
 
         URL url = null;
@@ -112,9 +114,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
                 Log.e("xxx","fav" + cursor.getString(12));
 
             }
-            cursor.close();
-            db.close();
-            return results;
+            return cursor;
         }else {
 
             //create a url object
@@ -137,7 +137,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
 
     }
 
-    private List<MoviesModel> extractFromJson(String jsonResponse) {
+    private Cursor extractFromJson(String jsonResponse) {
 
         final String RESULTS = "results";
         final String POSTER_PATH = "poster_path";
@@ -154,6 +154,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
 
         List<MoviesModel> results = new ArrayList<>();
 
+        Cursor cursor = null;
         if (jsonResponse == null)
             return null;
 
@@ -162,10 +163,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
 
             JSONArray resultsArray = response.getJSONArray(RESULTS);
 
-
-            MoviesDBHelper dbHelper = new MoviesDBHelper(mContext);
-
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Vector<ContentValues> cvVector = new Vector<>(resultsArray.length());
 
             for (int i = 0; i < resultsArray.length(); i++) {
 
@@ -221,30 +219,26 @@ public class MovieTaskLoader extends AsyncTaskLoader {
                 contentValues.put(MoviesContract.MoviesEntry.COL_SYNOPSIS,overview);
                 contentValues.put(MoviesContract.MoviesEntry.COL_SORT,sortOrder);
 
-                long rowId = db.insert(MoviesContract.MoviesEntry.TABLE_NAME,null,contentValues);
-
-                Log.e("xxx","inserted" + rowId );
+                cvVector.add(contentValues);
 
             }
 
-            Cursor cursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null);
 
-            Log.e("xxx","cursor size" + cursor.getCount());
+            int inserted = 0;
+            // add to database
+            if ( cvVector.size() > 0 ) {
+                ContentValues[] cvArray = new ContentValues[cvVector.size()];
+                cvVector.toArray(cvArray);
+                inserted = getContext().getContentResolver().bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, cvArray);
 
-            cursor.close();
-            db.close();
+                Log.e("xxx","inserted using cp" + inserted);
 
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return results;
+        cursor = mContext.getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,null,null,null,null);
+        return cursor;
     }
 }

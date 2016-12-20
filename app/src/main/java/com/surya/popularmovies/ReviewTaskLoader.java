@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import static com.surya.popularmovies.Utils.Utility.makeHttpRequest;
 
@@ -102,26 +103,59 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
 
             JSONArray trailersArray = videosObject.getJSONArray(RESULTS);
 
+            Vector<ContentValues> cVVector = new Vector<>(trailersArray.length());
+
+            ContentValues trailerValues = new ContentValues();
+
             for (int p = 0; p < trailersArray.length(); p++) {
 
                 String trailerId = trailersArray.getJSONObject(p).getString(KEY);
                 String trailerName = trailersArray.getJSONObject(p).getString(KEY);
+                trailerValues.put(MoviesContract.TrailerEntry.COL__TRAILER_LINK,trailerId);
+                trailerValues.put(MoviesContract.TrailerEntry.COL_TRAILER_NAME,trailerName);
+                cVVector.add(trailerValues);
+            }
+
+            int inserted = 0;
+            // add to database
+            if ( cVVector.size() > 0 ) {
+                ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                cVVector.toArray(cvArray);
+                inserted = getContext().getContentResolver().bulkInsert(MoviesContract.TrailerEntry.CONTENT_URI, cvArray);
+
+                Log.e("xxx","bulk insert trailers " + inserted);
             }
 
             //fetch reviews
+
             JSONObject reviewsObject = response.getJSONObject(REVIEWS);
 
             JSONArray reviewsArray = reviewsObject.getJSONArray(RESULTS);
+
+            Vector<ContentValues> reviewVector = new Vector<>(reviewsArray.length());
+
+            ContentValues reviewValues = new ContentValues();
 
             for (int q = 0; q < reviewsArray.length(); q++) {
 
                 String username = reviewsArray.getJSONObject(q).getString(AUTHOR);
                 String content = reviewsArray.getJSONObject(q).getString(CONTENT);
                 String url_link = reviewsArray.getJSONObject(q).getString(LINK);
+
+                reviewValues.put(MoviesContract.ReviewEntry.COL_AUTHOR,username);
+                reviewValues.put(MoviesContract.ReviewEntry.COL_CONTENT,content);
+                reviewValues.put(MoviesContract.ReviewEntry.COL_URL,url_link);
+                reviewVector.add(reviewValues);
             }
+            // add to database
+            if ( reviewVector.size() > 0 ) {
+                inserted = 0;
+                ContentValues[] cvArray = new ContentValues[reviewVector.size()];
+                reviewVector.toArray(cvArray);
+                inserted = getContext().getContentResolver().bulkInsert(MoviesContract.ReviewEntry.CONTENT_URI, cvArray);
 
-
-
+                Log.e("xxx","bulk insert reviews " + inserted);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.surya.popularmovies;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -21,13 +22,13 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemClickListener ,LoaderManager.LoaderCallbacks<List<MoviesModel>>{
+public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemClickListener ,LoaderManager.LoaderCallbacks<Cursor>{
 
     MoviesAdapter mAdapter;
 
     RecyclerView recyclerView;
 
-    ArrayList<MoviesModel> movieList;
+    Cursor cursor;
 
     private static String lastSortingOrder = "dummy";
 
@@ -40,11 +41,11 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null ||!savedInstanceState.containsKey(Utility.MOVIES_ARRAY)){
-             movieList = new ArrayList<>();
+//             movieList = new ArrayList<>();
              updateMovieList();
              Log.e("xxx","saved instance null");
         }else {
-             movieList = savedInstanceState.getParcelableArrayList(Utility.MOVIES_ARRAY);
+//             movieList = savedInstanceState.getParcelableArrayList(Utility.MOVIES_ARRAY);
              Log.e("xxx","saved instance not ::: null");
         }
 
@@ -59,7 +60,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        outState.putParcelableArrayList(Utility.MOVIES_ARRAY,movieList);
+//        outState.putParcelableArrayList(Utility.MOVIES_ARRAY,movieList);
 
         super.onSaveInstanceState(outState);
     }
@@ -72,6 +73,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
         Log.e("XXX","onCreateView");
 
+        cursor = null;
         GridLayoutManager layoutManager;
 
         if (getResources().getConfiguration().orientation == 1) {
@@ -81,7 +83,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         }
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new MoviesAdapter(getActivity(),0,this,movieList);
+        mAdapter = new MoviesAdapter(getActivity(),0,this,cursor);
 
         recyclerView.setAdapter(mAdapter);
 
@@ -97,7 +99,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         String sortOrder = Utility.getSortOrder(getActivity());
 
         if (!lastSortingOrder.equals(sortOrder)){
-            movieList.clear();
+//            movieList.clear();
             lastSortingOrder = sortOrder;
             updateMovieList();
         }
@@ -109,35 +111,44 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     @Override
     public void onListItemClick(int position) {
 
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        /*Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra(Utility.MOVIES_OBJECT, movieList.get(position));
-        startActivity(intent);
+        startActivity(intent);*/
 
     }
 
     @Override
-    public Loader<List<MoviesModel>> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         return new MovieTaskLoader(getActivity(),Utility.getSortOrder(getActivity()));
     }
 
     @Override
-    public void onLoadFinished(Loader<List<MoviesModel>> loader, List<MoviesModel> data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
         if (data != null) {
+//
+//            movieList.clear();
+//            for (int i = 0; i < data.size(); i++) {
+//                movieList.add(data.get(i));
+//                mAdapter.notifyDataSetChanged();
+//            }
 
-            movieList.clear();
-            for (int i = 0; i < data.size(); i++) {
-                movieList.add(data.get(i));
-                mAdapter.notifyDataSetChanged();
-            }
+            Log.e("xxx",data.getCount() + "count");
+
+            mAdapter.notifyDataSetChanged();
+
+
+            Log.e("xxx",mAdapter.getItemCount() + "itrcount");
+
+
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<List<MoviesModel>> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {
 
-        movieList.clear();
+//        movieList.clear();
 
     }
 

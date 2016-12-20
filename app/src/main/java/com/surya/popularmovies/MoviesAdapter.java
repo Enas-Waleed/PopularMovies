@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.surya.popularmovies.Utils.Utility;
+import com.surya.popularmovies.data.MoviesContract;
 
 import java.util.List;
 
@@ -27,12 +28,12 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
     private Context mContext;
     private int id;
     final private ListItemClickListener mOnClickListener;
+    Cursor cursor;
 
-
-//    private int COL_POSTER_PATH = 0;
-//    private int COL_VOTE_AVERAGE = 1;
-//    private int COL_RELEASE_DATE = 2;
-//    private int COL_POPULARITY = 3;
+    private int COL_POSTER_PATH = 0;
+    private int COL_VOTE_AVERAGE = 1;
+    private int COL_RELEASE_DATE = 2;
+    private int COL_POPULARITY = 3;
 
 
 
@@ -72,13 +73,12 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
         }
     }
 
-    public MoviesAdapter(Context context, int id, ListItemClickListener clickListener, List<MoviesModel> moviesList) {
+    public MoviesAdapter(Context context, int id, ListItemClickListener clickListener,Cursor cursor) {
 
         this.mContext = context;
         this.id = id;
         this.mOnClickListener = clickListener;
-        this.moviesList = moviesList;
-
+        this.cursor = cursor;
     }
 
     @Override
@@ -94,48 +94,51 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        (holder.mRatingView).setText(moviesList.get(position).getVote_average() + "/10");
-
-        String releaseDate = moviesList.get(position).getRelease_date();
-
-        String[] year = releaseDate.split("-");
-
-        int rating = Utility.formatPopularity(moviesList.get(position).getPopularity());
-
-        holder.mPopularityView.setText(String.valueOf(rating));
-        holder.mReleaseView.setText(year[0]);
-
-        Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + moviesList.get(position).getPoster_path()).into(holder.posterView);
-
-
-//        if (!mCursor.moveToPosition(position))
-//            return;
+//        (holder.mRatingView).setText(cursor.getString(1) + "/10");
 //
-//        (holder.mRatingView).setText(mCursor.getString(COL_VOTE_AVERAGE) + "/10");
-//
-//        String releaseDate = mCursor.getString(COL_RELEASE_DATE);
+//        String releaseDate = cursor.getString(2);
 //
 //        String[] year = releaseDate.split("-");
 //
-//        int rating = Utility.formatPopularity(mCursor.getString(COL_POPULARITY));
+//        int rating = Utility.formatPopularity(moviesList.get(position).getPopularity());
 //
 //        holder.mPopularityView.setText(String.valueOf(rating));
 //        holder.mReleaseView.setText(year[0]);
 //
-//        Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + mCursor.getString(COL_POSTER_PATH)).into(holder.posterView);
+//        Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + moviesList.get(position).getPoster_path()).into(holder.posterView);
+
+        if (cursor != null) {
+            if (!cursor.moveToPosition(position))
+                return;
+
+            (holder.mRatingView).setText(cursor.getString(COL_VOTE_AVERAGE) + "/10");
+
+            String releaseDate = cursor.getString(COL_RELEASE_DATE);
+
+            String[] year = releaseDate.split("-");
+
+            int rating = Utility.formatPopularity(cursor.getString(COL_POPULARITY));
+
+            holder.mPopularityView.setText(String.valueOf(rating));
+            holder.mReleaseView.setText(year[0]);
+
+            Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + cursor.getString(COL_POSTER_PATH)).into(holder.posterView);
 
 
-//        Log.e("XXX",mCursor.getColumnIndex(MoviesContract.CategoryEntry.COL_RELEASE_DATE) + "release date");
-//        Log.e("XXX",mCursor.getColumnIndex(MoviesContract.CategoryEntry.COL_VOTE_AVERAGE) + "vote average");
-//        Log.e("XXX",mCursor.getColumnIndex(MoviesContract.CategoryEntry.COL_POPULARITY) + "popu");
-//        Log.e("XXX",mCursor.getColumnIndex(MoviesContract.CategoryEntry.COL_POSTER_PATH) + "postrer");
-
+            Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_RELEASE_DATE) + "release date");
+            Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_VOTE_AVERAGE) + "vote average");
+            Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_POPULARITY) + "popu");
+            Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_POSTER_PATH) + "postrer");
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return moviesList.size();
+        if (cursor !=null)
+        return cursor.getCount();
+        else
+            return 0;
     }
 
 }
