@@ -3,15 +3,14 @@ package com.surya.popularmovies.data;
 import android.provider.BaseColumns;
 
 /**
- * Created by Surya on 17-12-2016.
+ * Created by Surya on 19-12-2016.
  */
 
-public final class MoviesContract {
+public class MoviesContract {
 
+    public static final class MoviesEntry implements BaseColumns{
 
-    public static final class FavouriteEntry implements BaseColumns{
-
-        public static final String TABLE_NAME = "Favourites";
+        public static final String TABLE_NAME = "Movies";
 
         //column movie id
         public static final String COL_MOVIE_ID = "movie_id";
@@ -46,16 +45,18 @@ public final class MoviesContract {
         //column synopsis
         public static final String COL_SYNOPSIS = "synopsis";
 
+        public static final String COL_SORT = "sort_by";
+
     }
 
-    public static final class TrailerEntry implements BaseColumns{
+    public static final class TrailerEntry implements BaseColumns {
 
+        public static final String TABLE_NAME = "trailers";
         //column trailer link
-        public static final String COL_LINK = "trailer_link";
+        public static final String COL__TRAILER_LINK = "trailer_link";
 
         //column trailer name
         public static final String COL_TRAILER_NAME = "trailer_name";
-
     }
 
     public static final class ReviewEntry implements BaseColumns{
@@ -69,6 +70,9 @@ public final class MoviesContract {
         //col url link
         public static final String COL_URL = "url_link";
 
+        public static final String TABLE_NAME = "reviews";
+
     }
+
 
 }

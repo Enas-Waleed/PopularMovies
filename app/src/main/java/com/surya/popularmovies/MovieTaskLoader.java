@@ -2,11 +2,11 @@ package com.surya.popularmovies;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.surya.popularmovies.Utils.Utility;
 import com.surya.popularmovies.data.MoviesContract;
@@ -16,11 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -64,21 +60,80 @@ public class MovieTaskLoader extends AsyncTaskLoader {
                 .appendQueryParameter(API_KEY,BuildConfig.TMDB_API_KEY)
                 .build();
 
-        //create a url object
-        try {
-            url = new URL(builtUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG,"Error in url " + e.getMessage());
-        }
-        String jsonResponse = null;
 
-        try {
-            jsonResponse = makeHttpRequest(url);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (sortOrder.equals(mContext.getString(R.string.pref_sort_favourite))){
+
+            List<MoviesModel> results = new ArrayList<>();
+
+            MoviesDBHelper dbHelper = new MoviesDBHelper(mContext);
+
+//            String selection = MoviesContract.MoviesEntry.COL_SORT + " = " + sortOrder;
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+            Cursor cursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null);
+
+            int COL_POSTER_PATH = 2;
+            int COL_SYNOPSIS = 11;
+            int COL_RELEASE_DATE = 4;
+            int COL_MOVIE_ID = 1;
+            int COL_TITLE = 6;
+            int COL_BACKDROP = 7;
+            int COL_POPULARITY = 5;
+            int COL_VOTE_COUNT = 8;
+            int COL_VOTE_AVERAGE = 3;
+            int COL_LANGUAGE = 10;
+            int COL_GENRE = 9;
+            for (int i = 0; i < cursor.getCount(); i++) {
+
+                cursor.moveToPosition(i);
+
+                if (cursor.getString(12).equals(mContext.getString(R.string.pref_sort_favourite)))
+                    results.add(new MoviesModel(
+                                                cursor.getString(COL_POSTER_PATH),
+                                                cursor.getString(COL_SYNOPSIS),
+                                                cursor.getString(COL_RELEASE_DATE),
+                                                cursor.getString(COL_MOVIE_ID),
+                                                cursor.getString(COL_TITLE),
+                                                cursor.getString(COL_BACKDROP),
+                                                cursor.getString(COL_POPULARITY),
+                                                cursor.getString(COL_VOTE_COUNT),
+                                                cursor.getString(COL_VOTE_AVERAGE),
+                                                cursor.getString(COL_LANGUAGE),
+                                                cursor.getString(COL_GENRE)
+                                                ));
+
+                Log.e("xxx","fav" + cursor.getString(12));
+
+            }
+            cursor.close();
+            db.close();
+            return results;
+        }else {
+
+            //create a url object
+            try {
+                url = new URL(builtUri.toString());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, "Error in url " + e.getMessage());
+            }
+            String jsonResponse = null;
+
+            try {
+                jsonResponse = makeHttpRequest(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return extractFromJson(jsonResponse);
+
         }
-        return extractFromJson(jsonResponse);
 
     }
 
@@ -98,9 +153,6 @@ public class MovieTaskLoader extends AsyncTaskLoader {
         final String GENRE = "genre_ids";
 
         List<MoviesModel> results = new ArrayList<>();
-        ContentValues contentValues = new ContentValues();
-
-        SQLiteDatabase db = (new MoviesDBHelper(mContext)).getWritableDatabase();
 
         if (jsonResponse == null)
             return null;
@@ -109,6 +161,11 @@ public class MovieTaskLoader extends AsyncTaskLoader {
             JSONObject response = new JSONObject(jsonResponse);
 
             JSONArray resultsArray = response.getJSONArray(RESULTS);
+
+
+            MoviesDBHelper dbHelper = new MoviesDBHelper(mContext);
+
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
 
             for (int i = 0; i < resultsArray.length(); i++) {
 
@@ -148,28 +205,40 @@ public class MovieTaskLoader extends AsyncTaskLoader {
                 }
 
                 results.add(new MoviesModel(poster_path,overview,release_date,id,title,
-                        backdrop_path,popularity,vote_count,vote_average,language,genre_id));
+                        backdrop_path,popularity,vote_count,vote_average,language,formatGenre));
 
-                contentValues.put(MoviesContract.CategoryEntry.COL_CATEGORY,sortOrder);
-                contentValues.put(MoviesContract.CategoryEntry.COL_MOVIE_ID,id);
-                contentValues.put(MoviesContract.CategoryEntry.COL_POSTER_PATH,poster_path);
-                contentValues.put(MoviesContract.CategoryEntry.COL_VOTE_AVERAGE,vote_average);
-                contentValues.put(MoviesContract.CategoryEntry.COL_RELEASE_DATE,release_date);
-                contentValues.put(MoviesContract.CategoryEntry.COL_POPULARITY,popularity);
-                contentValues.put(MoviesContract.CategoryEntry.COL_TITLE,title);
-                contentValues.put(MoviesContract.CategoryEntry.COL_BACKDROP,backdrop_path);
-                contentValues.put(MoviesContract.CategoryEntry.COL_VOTE_COUNT,vote_count);
-                contentValues.put(MoviesContract.CategoryEntry.COL_GENRE,formatGenre);
-                contentValues.put(MoviesContract.CategoryEntry.COL_LANGUAGE,language);
-                contentValues.put(MoviesContract.CategoryEntry.COL_SYNOPSIS,overview);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MoviesContract.MoviesEntry.COL_MOVIE_ID,id);
+                contentValues.put(MoviesContract.MoviesEntry.COL_POSTER_PATH,poster_path);
+                contentValues.put(MoviesContract.MoviesEntry.COL_VOTE_AVERAGE,vote_average);
+                contentValues.put(MoviesContract.MoviesEntry.COL_RELEASE_DATE,release_date);
+                contentValues.put(MoviesContract.MoviesEntry.COL_POPULARITY,popularity);
+                contentValues.put(MoviesContract.MoviesEntry.COL_TITLE,title);
+                contentValues.put(MoviesContract.MoviesEntry.COL_BACKDROP,backdrop_path);
+                contentValues.put(MoviesContract.MoviesEntry.COL_VOTE_COUNT,vote_count);
+                contentValues.put(MoviesContract.MoviesEntry.COL_GENRE,formatGenre);
+                contentValues.put(MoviesContract.MoviesEntry.COL_LANGUAGE,language);
+                contentValues.put(MoviesContract.MoviesEntry.COL_SYNOPSIS,overview);
+                contentValues.put(MoviesContract.MoviesEntry.COL_SORT,sortOrder);
 
+                long rowId = db.insert(MoviesContract.MoviesEntry.TABLE_NAME,null,contentValues);
 
-
-                long rowId = db.insert(MoviesContract.CategoryEntry.TABLE_NAME,null,contentValues);
-
-//                Toast.makeText(mContext, rowId + "inserted", Toast.LENGTH_SHORT).show();
+                Log.e("xxx","inserted" + rowId );
 
             }
+
+            Cursor cursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null);
+
+            Log.e("xxx","cursor size" + cursor.getCount());
+
+            cursor.close();
+            db.close();
 
 
         } catch (JSONException e) {

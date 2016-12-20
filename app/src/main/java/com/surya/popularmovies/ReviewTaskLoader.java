@@ -1,5 +1,6 @@
 package com.surya.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
@@ -7,6 +8,7 @@ import android.util.Log;
 
 import com.surya.popularmovies.MoviesModel;
 import com.surya.popularmovies.Utils.Utility;
+import com.surya.popularmovies.data.MoviesContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,24 +75,13 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
 
         extractFromJson(jsonResponse);
 
-        Log.e("xxxx",jsonResponse);
+//        Log.e("xxxx",jsonResponse);
         return null;
     }
 
     private void extractFromJson(String jsonResponse) {
 
         final String RESULTS = "results";
-        final String POSTER_PATH = "poster_path";
-        final String OVERVIEW = "overview";
-        final String RELEASE_DATE = "release_date";
-        final String ID = "id";
-        final String TITLE = "title";
-        final String BACKDROP_PATH = "backdrop_path";
-        final String POPULARITY = "popularity";
-        final String VOTE_COUNT = "vote_count";
-        final String VOTE_AVERAGE = "vote_average";
-        final String LANGUAGE = "original_language";
-        final String GENRE = "genre_ids";
         final String VIDEOS = "videos";
         final String REVIEWS = "reviews";
         final String KEY = "key";
@@ -114,6 +105,7 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
             for (int p = 0; p < trailersArray.length(); p++) {
 
                 String trailerId = trailersArray.getJSONObject(p).getString(KEY);
+                String trailerName = trailersArray.getJSONObject(p).getString(KEY);
             }
 
             //fetch reviews
@@ -127,6 +119,8 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
                 String content = reviewsArray.getJSONObject(q).getString(CONTENT);
                 String url_link = reviewsArray.getJSONObject(q).getString(LINK);
             }
+
+
 
 
         } catch (JSONException e) {

@@ -20,12 +20,14 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.trailer_list_item, parent, false);
 
-        return new TrailerAdapter.ViewHolder(v);
+        return new ViewHolder(v);
 
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
+
 
 
 

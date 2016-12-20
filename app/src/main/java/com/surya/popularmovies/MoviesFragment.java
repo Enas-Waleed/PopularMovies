@@ -1,13 +1,6 @@
 package com.surya.popularmovies;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -19,16 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.surya.popularmovies.Utils.Utility;
-import com.surya.popularmovies.data.MoviesContract;
-import com.surya.popularmovies.data.MoviesDBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.internal.Util;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -43,11 +31,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
     private static String lastSortingOrder = "dummy";
 
-    /*private final String[] projection = {MoviesContract.CategoryEntry.COL_POSTER_PATH,
-                                         MoviesContract.CategoryEntry.COL_VOTE_AVERAGE,
-                                         MoviesContract.CategoryEntry.COL_RELEASE_DATE,
-                                         MoviesContract.CategoryEntry.COL_POPULARITY};
-                                         */
 
     public MoviesFragment() {
     }
@@ -98,26 +81,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         }
         recyclerView.setLayoutManager(layoutManager);
 
-        SQLiteDatabase db = (new MoviesDBHelper(getActivity())).getReadableDatabase();
-
-
-        /*String selection = MoviesContract.FavouriteEntry.COL_CATEGORY + " = ?";
-        String[] selectionArgs = {Utility.getSortOrder(getActivity())};
-
-        Cursor cursor = db.query(MoviesContract.FavouriteEntry.TABLE_NAME,
-                                    projection,
-                                    selection,
-                                    selectionArgs,
-                                    null,
-                                    null,
-                                    null);
-                                    */
-
-
-//        mAdapter = new MoviesAdapter(getActivity(),0,this,cursor);
-
-
-
+        mAdapter = new MoviesAdapter(getActivity(),0,this,movieList);
 
         recyclerView.setAdapter(mAdapter);
 
@@ -145,9 +109,9 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     @Override
     public void onListItemClick(int position) {
 
-        /*Intent intent = new Intent(getActivity(), DetailActivity.class);
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra(Utility.MOVIES_OBJECT, movieList.get(position));
-        startActivity(intent);*/
+        startActivity(intent);
 
     }
 
