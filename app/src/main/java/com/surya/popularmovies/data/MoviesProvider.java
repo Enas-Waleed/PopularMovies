@@ -65,6 +65,7 @@ public class MoviesProvider extends ContentProvider {
                                         null,
                                         null);
 
+                Log.e("xxx","querying movies  " + retCursor.getCount());
                         break;
 
             case TRAILERS:
@@ -76,6 +77,8 @@ public class MoviesProvider extends ContentProvider {
                                         null,
                                         null);
 
+
+                Log.e("xxx","querying trailers  " + retCursor.getCount());
                         break;
 
             case REVIEWS:
@@ -87,6 +90,8 @@ public class MoviesProvider extends ContentProvider {
                                         null,
                                         null);
 
+
+                Log.e("xxx","querying reviews  " + retCursor.getCount());
                         break;
             default:
                 Log.e("xxx","Unsupported uri " + uri);
@@ -135,8 +140,6 @@ public class MoviesProvider extends ContentProvider {
             case MOVIES:
                 rowId = db.insert(MoviesContract.MoviesEntry.TABLE_NAME,null,values);
 
-                Log.e("xxx","inserting into movies in content resolver " + rowId );
-
                 if (rowId > 0){
 
                     contentUri = MoviesContract.MoviesEntry.buildMovies(rowId);
@@ -148,8 +151,6 @@ public class MoviesProvider extends ContentProvider {
 
                 rowId = db.insert(MoviesContract.TrailerEntry.TABLE_NAME,null,values);
 
-                Log.e("xxx","inserting into trailer in content resolver " + rowId );
-
                 if (rowId > 0){
 
                     contentUri = MoviesContract.TrailerEntry.buildTrailers(rowId);
@@ -160,15 +161,12 @@ public class MoviesProvider extends ContentProvider {
 
             case REVIEWS:
 
-                rowId = db.insert(MoviesContract.ReviewEntry.TABLE_NAME,null,values);
-
                 if (rowId > 0){
 
                     contentUri = MoviesContract.TrailerEntry.buildTrailers(rowId);
 
                 }
 
-                Log.e("xxx","inserting into review in content resolver " + rowId );
                 break;
             default:
                 rowId = -1;
@@ -180,6 +178,20 @@ public class MoviesProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if (uriMatcher.match(uri) == MOVIES){
+
+            int rowId = db.delete(MoviesContract.MoviesEntry.TABLE_NAME,selection,selectionArgs);
+
+            Log.e("XXX"," deleted in cp " + rowId);
+
+            getContext().getContentResolver().notifyChange(uri,null);
+            return rowId;
+
+        }
+
         return 0;
     }
 
@@ -253,7 +265,7 @@ public class MoviesProvider extends ContentProvider {
                 Log.e("xxx","Unsupported uri " + uri);
                 return super.bulkInsert(uri, values);
         }
-        Log.e("xxx","bulk insert " + count);
+        getContext().getContentResolver().notifyChange(uri,null);
         return count;
 
 

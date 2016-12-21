@@ -2,6 +2,7 @@ package com.surya.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,18 +23,16 @@ import java.util.List;
  * Created by Surya on 04-12-2016.
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolder>{
+public class MoviesAdapter extends CursorRecyclerViewAdapter<MoviesAdapter.ViewHolder>{
 
-    private List<MoviesModel> moviesList;
     private Context mContext;
     private int id;
     final private ListItemClickListener mOnClickListener;
-    Cursor cursor;
 
-    private int COL_POSTER_PATH = 0;
-    private int COL_VOTE_AVERAGE = 1;
-    private int COL_RELEASE_DATE = 2;
-    private int COL_POPULARITY = 3;
+    private int COL_POSTER_PATH = 2;
+    private int COL_VOTE_AVERAGE = 3;
+    private int COL_RELEASE_DATE = 4;
+    private int COL_POPULARITY = 5;
 
 
 
@@ -59,7 +58,7 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
             if (id == 1)
                     cardView.getLayoutParams().width = 250;
             else {
-                LinearLayout.LayoutParams layoutParams    = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(8,8,8,8);
                 cardView.setLayoutParams(layoutParams);
             }
@@ -75,10 +74,10 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
 
     public MoviesAdapter(Context context, int id, ListItemClickListener clickListener,Cursor cursor) {
 
+        super(context,cursor);
         this.mContext = context;
         this.id = id;
         this.mOnClickListener = clickListener;
-        this.cursor = cursor;
     }
 
     @Override
@@ -92,53 +91,29 @@ public class MoviesAdapter extends RecyclerView.Adapter <MoviesAdapter.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
 
-//        (holder.mRatingView).setText(cursor.getString(1) + "/10");
-//
-//        String releaseDate = cursor.getString(2);
-//
-//        String[] year = releaseDate.split("-");
-//
-//        int rating = Utility.formatPopularity(moviesList.get(position).getPopularity());
-//
-//        holder.mPopularityView.setText(String.valueOf(rating));
-//        holder.mReleaseView.setText(year[0]);
-//
-//        Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + moviesList.get(position).getPoster_path()).into(holder.posterView);
+        DatabaseUtils.dumpCursor(cursor);
 
-        if (cursor != null) {
-            if (!cursor.moveToPosition(position))
-                return;
+        (holder.mRatingView).setText(cursor.getString(COL_VOTE_AVERAGE) + "/10");
 
-            (holder.mRatingView).setText(cursor.getString(COL_VOTE_AVERAGE) + "/10");
+        String releaseDate = cursor.getString(COL_RELEASE_DATE);
 
-            String releaseDate = cursor.getString(COL_RELEASE_DATE);
+        String[] year = releaseDate.split("-");
 
-            String[] year = releaseDate.split("-");
+        int rating = Utility.formatPopularity(cursor.getString(COL_POPULARITY));
 
-            int rating = Utility.formatPopularity(cursor.getString(COL_POPULARITY));
+        holder.mPopularityView.setText(String.valueOf(rating));
+        holder.mReleaseView.setText(year[0]);
 
-            holder.mPopularityView.setText(String.valueOf(rating));
-            holder.mReleaseView.setText(year[0]);
-
-            Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + cursor.getString(COL_POSTER_PATH)).into(holder.posterView);
+        Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + cursor.getString(COL_POSTER_PATH)).into(holder.posterView);
 
 
-            Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_RELEASE_DATE) + "release date");
-            Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_VOTE_AVERAGE) + "vote average");
-            Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_POPULARITY) + "popu");
-            Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_POSTER_PATH) + "postrer");
-        }
+        /*Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_RELEASE_DATE) + "release date");
+        Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_VOTE_AVERAGE) + "vote average");
+        Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_POPULARITY) + "popu");
+        Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_POSTER_PATH) + "postrer");*/
 
-    }
-
-    @Override
-    public int getItemCount() {
-        if (cursor !=null)
-        return cursor.getCount();
-        else
-            return 0;
     }
 
 }

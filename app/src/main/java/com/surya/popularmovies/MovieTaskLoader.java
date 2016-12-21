@@ -152,8 +152,6 @@ public class MovieTaskLoader extends AsyncTaskLoader {
         final String LANGUAGE = "original_language";
         final String GENRE = "genre_ids";
 
-        List<MoviesModel> results = new ArrayList<>();
-
         Cursor cursor = null;
         if (jsonResponse == null)
             return null;
@@ -202,9 +200,6 @@ public class MovieTaskLoader extends AsyncTaskLoader {
                     }
                 }
 
-                results.add(new MoviesModel(poster_path,overview,release_date,id,title,
-                        backdrop_path,popularity,vote_count,vote_average,language,formatGenre));
-
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(MoviesContract.MoviesEntry.COL_MOVIE_ID,id);
                 contentValues.put(MoviesContract.MoviesEntry.COL_POSTER_PATH,poster_path);
@@ -213,7 +208,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
                 contentValues.put(MoviesContract.MoviesEntry.COL_POPULARITY,popularity);
                 contentValues.put(MoviesContract.MoviesEntry.COL_TITLE,title);
                 contentValues.put(MoviesContract.MoviesEntry.COL_BACKDROP,backdrop_path);
-                contentValues.put(MoviesContract.MoviesEntry.COL_VOTE_COUNT,vote_count);
+                contentValues.put(MoviesContract.MoviesEntry.COL_VOTE_COUNT,mContext.getString(R.string.formatVotes,vote_count));
                 contentValues.put(MoviesContract.MoviesEntry.COL_GENRE,formatGenre);
                 contentValues.put(MoviesContract.MoviesEntry.COL_LANGUAGE,language);
                 contentValues.put(MoviesContract.MoviesEntry.COL_SYNOPSIS,overview);

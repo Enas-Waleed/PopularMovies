@@ -89,6 +89,7 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
         final String AUTHOR = "author";
         final String CONTENT = "content";
         final String LINK = "url";
+        final String NAME = "name";
 
         List<MoviesModel> results = new ArrayList<>();
 
@@ -105,12 +106,15 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
 
             Vector<ContentValues> cVVector = new Vector<>(trailersArray.length());
 
-            ContentValues trailerValues = new ContentValues();
-
             for (int p = 0; p < trailersArray.length(); p++) {
 
+                ContentValues trailerValues = new ContentValues();
+
+
                 String trailerId = trailersArray.getJSONObject(p).getString(KEY);
-                String trailerName = trailersArray.getJSONObject(p).getString(KEY);
+                String trailerName = trailersArray.getJSONObject(p).getString(NAME);
+                Log.e("a",trailerName + trailerId);
+                trailerValues.put(MoviesContract.TrailerEntry.COL_MOVIE_ID,id);
                 trailerValues.put(MoviesContract.TrailerEntry.COL__TRAILER_LINK,trailerId);
                 trailerValues.put(MoviesContract.TrailerEntry.COL_TRAILER_NAME,trailerName);
                 cVVector.add(trailerValues);
@@ -134,14 +138,16 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
 
             Vector<ContentValues> reviewVector = new Vector<>(reviewsArray.length());
 
-            ContentValues reviewValues = new ContentValues();
 
             for (int q = 0; q < reviewsArray.length(); q++) {
+
+                ContentValues reviewValues = new ContentValues();
 
                 String username = reviewsArray.getJSONObject(q).getString(AUTHOR);
                 String content = reviewsArray.getJSONObject(q).getString(CONTENT);
                 String url_link = reviewsArray.getJSONObject(q).getString(LINK);
 
+                reviewValues.put(MoviesContract.ReviewEntry.COL_MOVIE_ID,id);
                 reviewValues.put(MoviesContract.ReviewEntry.COL_AUTHOR,username);
                 reviewValues.put(MoviesContract.ReviewEntry.COL_CONTENT,content);
                 reviewValues.put(MoviesContract.ReviewEntry.COL_URL,url_link);
@@ -160,7 +166,5 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 }

@@ -42,16 +42,20 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
         final String CREATE_TRAILER_TABLE = "CREATE TABLE "
                                                         + MoviesContract.TrailerEntry.TABLE_NAME + " ("
                                                         + MoviesContract.TrailerEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                                        + MoviesContract.TrailerEntry.COL_MOVIE_ID + " TEXT NOT NULL,"
                                                         + MoviesContract.TrailerEntry.COL_TRAILER_NAME + " TEXT NOT NULL,"
-                                                        + MoviesContract.TrailerEntry.COL__TRAILER_LINK + " TEXT NOT NULL"
-                                                        + " );";
+                                                        + MoviesContract.TrailerEntry.COL__TRAILER_LINK + " TEXT NOT NULL,"
+                                                        + "UNIQUE ("
+                                                        + MoviesContract.TrailerEntry.COL__TRAILER_LINK + ") ON CONFLICT REPLACE);";
         final String CREATE_REVIEW_TABLE = "CREATE TABLE "
                                                         + MoviesContract.ReviewEntry.TABLE_NAME + " ("
                                                         + MoviesContract.ReviewEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                                        + MoviesContract.ReviewEntry.COL_MOVIE_ID + " TEXT NOT NULL,"
                                                         + MoviesContract.ReviewEntry.COL_AUTHOR + " TEXT NOT NULL,"
                                                         + MoviesContract.ReviewEntry.COL_CONTENT + " TEXT NOT NULL,"
-                                                        + MoviesContract.ReviewEntry.COL_URL + " TEXT NOT NULL"
-                                                        + " );";
+                                                        + MoviesContract.ReviewEntry.COL_URL + " TEXT NOT NULL,"
+                                                        + "UNIQUE (" + MoviesContract.ReviewEntry.COL_AUTHOR + ","
+                                                        + MoviesContract.ReviewEntry.COL_CONTENT + ") ON CONFLICT REPLACE);";
 
 
 

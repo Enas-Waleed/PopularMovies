@@ -42,6 +42,8 @@
     <string name="my_preferences">PREFERENCES</string>
     <string name="trailers">Trailers :</string>
     <string name="reviews">Reviews :</string>
+    <string name="failed_to_load_the_data">Failed To Load The Data</string>
+    <string name="tmdb_user">TMDB User</string>
 
 
 </resources>

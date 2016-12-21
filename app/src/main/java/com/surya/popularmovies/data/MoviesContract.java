@@ -80,6 +80,9 @@ public class MoviesContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_TRAILERS).build();
 
         public static final String TABLE_NAME = "trailers";
+
+        public static final String COL_MOVIE_ID = "movie_id";
+
         //column trailer link
         public static final String COL__TRAILER_LINK = "trailer_link";
 
@@ -101,6 +104,9 @@ public class MoviesContract {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_REVIEWS).build();
+
+
+        public static final String COL_MOVIE_ID = "movie_id";
 
         //column username
         public static final String COL_AUTHOR = "author";

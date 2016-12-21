@@ -1,17 +1,41 @@
 package com.surya.popularmovies;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+import com.surya.popularmovies.Utils.Utility;
 
 /**
  * Created by Surya on 16-12-2016.
  */
 
-public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHolder> {
+public class TrailerAdapter extends CursorRecyclerViewAdapter<TrailerAdapter.ViewHolder> {
+
+    Context context;
+
+    final private ListItemClickListener listItemClickListener;
+
+
+    public interface ListItemClickListener{
+        void onListItemClick(int position);
+    }
+
+    public TrailerAdapter(Context context, Cursor cursor,ListItemClickListener listItemClickListener) {
+        super(context, cursor);
+        this.context = context;
+        this.listItemClickListener = listItemClickListener;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -25,28 +49,32 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
 
 
+        DatabaseUtils.dumpCursor(cursor);
 
-
+        holder.mTitle.setText(cursor.getString(2));
+        Log.e("xxxx",Utility.YOUTUBE_IMG_URL + cursor.getString(3) + Utility.END_IMG_URL);
+        Picasso.with(context).load(Utility.YOUTUBE_IMG_URL + cursor.getString(3) + Utility.END_IMG_URL).into(holder.mPosterImage);
 
     }
 
-    @Override
-    public int getItemCount() {
-        return 3;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView mTitle;
         ImageView mPosterImage;
 
-        ViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             mPosterImage = (ImageView)itemView.findViewById(R.id.list_item_trailer_poster);
             mTitle = (TextView)itemView.findViewById(R.id.list_item_trailer_name);
+        }
+        @Override
+        public void onClick(View v) {
+            int clickPosition = getAdapterPosition();
+            listItemClickListener.onListItemClick(clickPosition);
         }
     }
 }

@@ -12,18 +12,19 @@
         <ImageView
             android:id="@+id/list_item_trailer_poster"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_height="160dp"
             android:src="@drawable/dummy"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/imageview" />
+
 
         <TextView
             android:id="@+id/list_item_trailer_name"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="40dp"
             android:gravity="center"
-            android:text="Trailer + name" />
+            android:textColor="@android:color/white"
+            android:background="@color/colorAccent" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

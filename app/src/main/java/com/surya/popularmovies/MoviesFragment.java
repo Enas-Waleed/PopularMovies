@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,9 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.surya.popularmovies.Utils.Utility;
+import com.surya.popularmovies.data.MoviesContract;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -27,8 +27,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     MoviesAdapter mAdapter;
 
     RecyclerView recyclerView;
-
-    Cursor cursor;
 
     private static String lastSortingOrder = "dummy";
 
@@ -41,11 +39,9 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null ||!savedInstanceState.containsKey(Utility.MOVIES_ARRAY)){
-//             movieList = new ArrayList<>();
              updateMovieList();
              Log.e("xxx","saved instance null");
         }else {
-//             movieList = savedInstanceState.getParcelableArrayList(Utility.MOVIES_ARRAY);
              Log.e("xxx","saved instance not ::: null");
         }
 
@@ -55,13 +51,15 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
         getLoaderManager().initLoader(0,null,this).forceLoad();
 
+        getLoaderManager().initLoader(1,null,this);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-//        outState.putParcelableArrayList(Utility.MOVIES_ARRAY,movieList);
 
+
+//        outState.putInt(Utility.MOVIE_POSITION,recyclerView.getVerticalScrollbarPosition());
         super.onSaveInstanceState(outState);
     }
 
@@ -73,7 +71,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
         Log.e("XXX","onCreateView");
 
-        cursor = null;
         GridLayoutManager layoutManager;
 
         if (getResources().getConfiguration().orientation == 1) {
@@ -83,7 +80,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         }
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new MoviesAdapter(getActivity(),0,this,cursor);
+        mAdapter = new MoviesAdapter(getActivity(),0,this,null);
 
         recyclerView.setAdapter(mAdapter);
 
@@ -99,8 +96,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         String sortOrder = Utility.getSortOrder(getActivity());
 
         if (!lastSortingOrder.equals(sortOrder)){
-//            movieList.clear();
-            lastSortingOrder = sortOrder;
+          lastSortingOrder = sortOrder;
             updateMovieList();
         }
 
@@ -111,44 +107,56 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     @Override
     public void onListItemClick(int position) {
 
-        /*Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra(Utility.MOVIES_OBJECT, movieList.get(position));
-        startActivity(intent);*/
+        Cursor cursor = mAdapter.getCursor();
 
+        cursor.moveToPosition(position);
+
+        Log.e("xxxx",cursor.getString(1) + "movie id");
+
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+
+        intent.putExtra(Utility.MOVIE_ID,cursor.getString(1));
+
+        startActivity(intent);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(1,null,this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        return new MovieTaskLoader(getActivity(),Utility.getSortOrder(getActivity()));
+        if (id == 0)
+            return new MovieTaskLoader(getActivity(),Utility.getSortOrder(getActivity()));
+        else {
+
+            String selection = MoviesContract.MoviesEntry.COL_SORT + " = ?" ;
+
+            return new CursorLoader(getActivity(),
+                                    MoviesContract.MoviesEntry.CONTENT_URI,
+                                    null,
+                                    selection,
+                                    new String[]{Utility.getSortOrder(getActivity())},
+                                    null);
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        if (data != null) {
-//
-//            movieList.clear();
-//            for (int i = 0; i < data.size(); i++) {
-//                movieList.add(data.get(i));
-//                mAdapter.notifyDataSetChanged();
-//            }
-
-            Log.e("xxx",data.getCount() + "count");
-
-            mAdapter.notifyDataSetChanged();
-
-
-            Log.e("xxx",mAdapter.getItemCount() + "itrcount");
-
-
+        if (loader.getId() == 1) {
+            mAdapter.swapCursor(data);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-//        movieList.clear();
+        mAdapter.swapCursor(null);
 
     }
 
