@@ -17,10 +17,14 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.surya.popularmovies.Utils.TestUtlis;
+import com.surya.popularmovies.Utils.Utility;
 import com.surya.popularmovies.data.MoviesContract;
 import com.surya.popularmovies.data.MoviesDBHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoviesFragment.OnMovieSelectedListener{
+
+    private String DETAIL_FRAGMENT_TAG = "DETAIL_FRAGMENT_TAG";
+    boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +33,25 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        Log.e("xxx","jb");
 
-//        TestUtlis.insertToDb(MainActivity.this);
+        if (findViewById(R.id.movie_detail_container) != null){
+
+
+            mTwoPane = true;
+
+            if (savedInstanceState == null){
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.movie_detail_container,new DetailFragment(),DETAIL_FRAGMENT_TAG)
+                        .commit();
+
+            }
+
+        }else{
+            mTwoPane = false;
+        }
+
 
     }
 
@@ -60,5 +80,35 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onMovieSelected(String movie_id) {
+
+        Log.e("Mainactivity",movie_id);
+
+        if (mTwoPane){
+
+            Bundle args = new Bundle();
+
+            args.putString(Utility.MOVIE_ID,movie_id);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment, DETAIL_FRAGMENT_TAG)
+                    .commit();
+
+        }else{
+
+            Intent intent = new Intent(this, DetailActivity.class);
+
+            intent.putExtra(Utility.MOVIE_ID,movie_id);
+
+            startActivity(intent);
+
+        }
+
+
+    }
 }
 

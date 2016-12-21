@@ -57,8 +57,8 @@ public class MoviesProvider extends ContentProvider {
 
 
             case MOVIES:
-                        retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME
-                                        ,projection,
+                        retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
+                                        projection,
                                         selection,
                                         selectionArgs,
                                         null,

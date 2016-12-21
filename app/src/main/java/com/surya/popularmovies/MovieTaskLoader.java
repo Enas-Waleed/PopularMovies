@@ -67,54 +67,10 @@ public class MovieTaskLoader extends AsyncTaskLoader {
 
             List<MoviesModel> results = new ArrayList<>();
 
-            MoviesDBHelper dbHelper = new MoviesDBHelper(mContext);
-
-//            String selection = MoviesContract.MoviesEntry.COL_SORT + " = " + sortOrder;
-
-            SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-            Cursor cursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null,
-                                            null);
-
-            int COL_POSTER_PATH = 2;
-            int COL_SYNOPSIS = 11;
-            int COL_RELEASE_DATE = 4;
-            int COL_MOVIE_ID = 1;
-            int COL_TITLE = 6;
-            int COL_BACKDROP = 7;
-            int COL_POPULARITY = 5;
-            int COL_VOTE_COUNT = 8;
-            int COL_VOTE_AVERAGE = 3;
-            int COL_LANGUAGE = 10;
-            int COL_GENRE = 9;
-            for (int i = 0; i < cursor.getCount(); i++) {
-
-                cursor.moveToPosition(i);
-
-                if (cursor.getString(12).equals(mContext.getString(R.string.pref_sort_favourite)))
-                    results.add(new MoviesModel(
-                                                cursor.getString(COL_POSTER_PATH),
-                                                cursor.getString(COL_SYNOPSIS),
-                                                cursor.getString(COL_RELEASE_DATE),
-                                                cursor.getString(COL_MOVIE_ID),
-                                                cursor.getString(COL_TITLE),
-                                                cursor.getString(COL_BACKDROP),
-                                                cursor.getString(COL_POPULARITY),
-                                                cursor.getString(COL_VOTE_COUNT),
-                                                cursor.getString(COL_VOTE_AVERAGE),
-                                                cursor.getString(COL_LANGUAGE),
-                                                cursor.getString(COL_GENRE)
-                                                ));
-
-                Log.e("xxx","fav" + cursor.getString(12));
-
-            }
-            return cursor;
+//            Cursor cursor = mContext.getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
+//                                                                null,
+//                                                                )
+            return null;
         }else {
 
             //create a url object
@@ -233,7 +189,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        cursor = mContext.getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,null,null,null,null);
-        return cursor;
+//        cursor = mContext.getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,null,null,null,null);
+        return null;
     }
 }

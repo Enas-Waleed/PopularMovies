@@ -1,5 +1,7 @@
 package com.surya.popularmovies;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
@@ -28,7 +30,16 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
     RecyclerView recyclerView;
 
+    private OnMovieSelectedListener mCallback;
+
     private static String lastSortingOrder = "dummy";
+
+
+    public interface OnMovieSelectedListener{
+
+        public void onMovieSelected(String movie_id);
+
+    }
 
 
     public MoviesFragment() {
@@ -45,6 +56,19 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
              Log.e("xxx","saved instance not ::: null");
         }
 
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnMovieSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnMovieSelectedListener");
+        }
     }
 
     private void updateMovieList() {
@@ -111,13 +135,15 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
         cursor.moveToPosition(position);
 
-        Log.e("xxxx",cursor.getString(1) + "movie id");
+//        ((OnMovieSelectedListener)getActivity()).onMovieSelected(cursor.getString(1));
 
         Intent intent = new Intent(getActivity(), DetailActivity.class);
 
         intent.putExtra(Utility.MOVIE_ID,cursor.getString(1));
 
         startActivity(intent);
+
+
 
     }
 

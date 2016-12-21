@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/content_detail"
+        android:id="@+id/movie_detail_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context="com.surya.popularmovies.DetailFragment"

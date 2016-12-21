@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.surya.popularmovies.Utils.Utility;
+
 public class DetailActivity extends AppCompatActivity {
 
     @Override
@@ -16,8 +18,22 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-      setSupportActionBar(toolbar);
+        String movieId = getIntent().getStringExtra(Utility.MOVIE_ID);
+
+        if (savedInstanceState == null){
+
+            Bundle arguments = new Bundle();
+
+            arguments.putString(Utility.MOVIE_ID,movieId);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.movie_detail_container,new DetailFragment())
+                    .commit();
+        }
+
 
         if (getSupportActionBar() != null)
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

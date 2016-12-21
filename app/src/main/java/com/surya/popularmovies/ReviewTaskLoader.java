@@ -57,7 +57,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
                 .appendQueryParameter(APPEND_PATH,TRAILER_REVIEW)
                 .build();
 
-        Log.e("xxx",builtUri.toString());
 
         //create a url object
         try {

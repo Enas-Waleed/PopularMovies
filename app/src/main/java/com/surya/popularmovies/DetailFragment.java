@@ -35,7 +35,8 @@ import com.surya.popularmovies.data.MoviesDBHelper;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,TrailerAdapter.ListItemClickListener{
+public class DetailFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>,TrailerAdapter.ListItemClickListener{
 
     private int CURSOR_ID = 3;
     private int REVIEWS_TASK_ID = 4;
@@ -59,10 +60,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.e("xxxx","oncreate");
-        movie_id = getActivity().getIntent().getStringExtra(Utility.MOVIE_ID);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(CURSOR_ID,null,this).forceLoad();
         getLoaderManager().initLoader(REVIEWS_TASK_ID,null,this);
         getLoaderManager().initLoader(TRAILERS_ID,null,this);
@@ -73,6 +72,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        Bundle arguments = getArguments();
+
+        if (arguments != null){
+
+            movie_id = arguments.getString(Utility.MOVIE_ID);
+
+        }
+
 
         backdrop_imageView = (ImageView)rootView.findViewById(R.id.backdrop_poster);
         poster_imageView = (ImageView)rootView.findViewById(R.id.poster);
