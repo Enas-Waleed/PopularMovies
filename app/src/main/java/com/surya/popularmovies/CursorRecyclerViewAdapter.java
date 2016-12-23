@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 /**
  * Written by sam_chordas on 8/11/15.
@@ -12,7 +13,7 @@ import android.support.v7.widget.RecyclerView;
  * for the CursorRecyclerViewApater.java file
  */
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder>
-extends RecyclerView.Adapter<VH>{
+        extends RecyclerView.Adapter<VH>{
     private static final String LOG_TAG = CursorRecyclerViewAdapter.class.getSimpleName();
     private Context mContext;
     private Cursor mCursor;

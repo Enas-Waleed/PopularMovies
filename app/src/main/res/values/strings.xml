@@ -45,6 +45,7 @@
     <string name="failed_to_load_the_data">Failed To Load The Data</string>
     <string name="tmdb_user">TMDB User</string>
     <string name="remove_from_fav">Remove From Favourites</string>
+    <string name="action_share">Share</string>
 
 
 </resources>

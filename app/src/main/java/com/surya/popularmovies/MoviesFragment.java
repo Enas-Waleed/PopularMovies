@@ -1,15 +1,16 @@
 package com.surya.popularmovies;
 
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(Utility.MOVIE_POSITION)){
-             updateMovieList();
+            updateMovieList();
 //             Log.e(LOG_TAG,"saved instance null");
         }
 
@@ -111,17 +112,17 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         if (id == MOVIE_TASK_LOADER)
-            return new MovieTaskLoader(getActivity(), Utility.getSortOrder(getActivity()));
+            return new MovieTaskLoader(getActivity(),Utility.getSortOrder(getActivity()));
         else {
 
             String selection = MoviesContract.MoviesEntry.COL_SORT + " = ?" ;
 
             return new CursorLoader(getActivity(),
-                                    MoviesContract.MoviesEntry.CONTENT_URI,
-                                    null,
-                                    selection,
-                                    new String[]{Utility.getSortOrder(getActivity())},
-                                    null);
+                    MoviesContract.MoviesEntry.CONTENT_URI,
+                    null,
+                    selection,
+                    new String[]{Utility.getSortOrder(getActivity())},
+                    null);
         }
     }
 

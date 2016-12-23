@@ -8,17 +8,22 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -47,15 +52,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private ImageView backdrop_imageView,genreImage;
     private ImageView poster_imageView;
     private  TextView movie_name,movie_release,
-                        movie_genre_name,movie_language,
-                        movie_popularity,movie_votes,
-                        movie_rating,movie_overview;
+            movie_genre_name,movie_language,
+            movie_popularity,movie_votes,
+            movie_rating,movie_overview;
 
     Button favButton;
     String poster_path,backdrop_path;
     private TrailerAdapter trailerAdapter;
     private ReviewAdapter reviewAdapter;
     RelativeLayout relativeLayout;
+    private ShareActionProvider mShareActionProvider;
+    private String mMovieString;
 
     public DetailFragment() {
     }
@@ -72,6 +79,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             getLoaderManager().initLoader(TRAILERS_ID, null, this);
             getLoaderManager().initLoader(REVIEWS_ID, null, this);
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -114,7 +127,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         RecyclerView trailer_recyclerView = (RecyclerView)rootView.findViewById(R.id.trailer_recyclerview);
 
         LinearLayoutManager reviewManager = new LinearLayoutManager(getActivity());
-        LinearLayoutManager trailerManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager trailerManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
 
         review_recyclerView.setLayoutManager(reviewManager);
         trailer_recyclerView.setLayoutManager(trailerManager);
@@ -135,42 +148,68 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return rootView;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_detail_fragment, menu);
+
+        // Retrieve the share menu item
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+
+        // Get the provider and hold onto it to set/change the share intent.
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+        // If onLoadFinished happens before this, we can go ahead and set the share intent now.
+        if (mMovieString != null) {
+            mShareActionProvider.setShareIntent(createShareMovieIntent());
+        }
+    }
+
+
+    private Intent createShareMovieIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mMovieString + "\n#PopularMovies\nBy Surya Teja");
+        return shareIntent;
+    }
+
     private void addToFavourites() {
 
         String selection = MoviesContract.MoviesEntry.COL_MOVIE_ID + " = " + movie_id;
 
         Cursor cursor = getActivity().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI
-                                            ,new String[]{MoviesContract.MoviesEntry.COL_MOVIE_ID, MoviesContract.MoviesEntry.COL_SORT}
-                                            ,selection
-                                            ,null
-                                            ,null
-                                            );
+                ,new String[]{MoviesContract.MoviesEntry.COL_MOVIE_ID, MoviesContract.MoviesEntry.COL_SORT}
+                ,selection
+                ,null
+                ,null
+        );
 
         //check for the sort type for given movie id
 
         long rowId ;
 
         if (cursor!=null)
-        while (cursor.moveToNext()){
+            while (cursor.moveToNext()){
 
-            if (cursor.getString(1).equals(getString(R.string.pref_sort_favourite))) {
+                if (cursor.getString(1).equals(getString(R.string.pref_sort_favourite))) {
 
-                String where = MoviesContract.MoviesEntry.COL_MOVIE_ID + " =? AND " + MoviesContract.MoviesEntry.COL_SORT + " =?";
+                    String where = MoviesContract.MoviesEntry.COL_MOVIE_ID + " =? AND " + MoviesContract.MoviesEntry.COL_SORT + " =?";
 
-                String[] whereArgs = new String[]{movie_id,getString(R.string.pref_sort_favourite)};
+                    String[] whereArgs = new String[]{movie_id,getString(R.string.pref_sort_favourite)};
 
-                rowId = getActivity().getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI
-                                                                    ,where,whereArgs);
+                    rowId = getActivity().getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI
+                            ,where,whereArgs);
 
 //                Log.e("xxx",rowId + "deleted");
 
 
-                cursor.close();
-                return;
-            }
-            cursor.moveToNext();
+                    cursor.close();
+                    return;
+                }
+                cursor.moveToNext();
 
-        }
+            }
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(MoviesContract.MoviesEntry.COL_MOVIE_ID,movie_id);
@@ -196,42 +235,42 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 //        Log.e(LOG_TAG,"oncreate loader");
 
-            if (id == REVIEWS_TASK_ID)
-                return new ReviewTaskLoader(getActivity(),movie_id);
-            else if (id == CURSOR_ID) {
+        if (id == REVIEWS_TASK_ID)
+            return new ReviewTaskLoader(getActivity(),movie_id);
+        else if (id == CURSOR_ID) {
 
-                String selection = MoviesContract.MoviesEntry.COL_MOVIE_ID + " = ?";
+            String selection = MoviesContract.MoviesEntry.COL_MOVIE_ID + " = ?";
 
-                return new CursorLoader(getActivity(),
-                        MoviesContract.MoviesEntry.CONTENT_URI,
-                        null,
-                        selection,
-                        new String[]{movie_id},
-                        null
-                );
-            }else if (id == TRAILERS_ID) {
+            return new CursorLoader(getActivity(),
+                    MoviesContract.MoviesEntry.CONTENT_URI,
+                    null,
+                    selection,
+                    new String[]{movie_id},
+                    null
+            );
+        }else if (id == TRAILERS_ID) {
 
-                String selection = MoviesContract.TrailerEntry.COL_MOVIE_ID + " = ?";
+            String selection = MoviesContract.TrailerEntry.COL_MOVIE_ID + " = ?";
 
-                return new CursorLoader(getActivity(),
-                        MoviesContract.TrailerEntry.CONTENT_URI,
-                        null,
-                        selection,
-                        new String[]{movie_id},
-                        null
-                );
-            }else if (id == REVIEWS_ID) {
+            return new CursorLoader(getActivity(),
+                    MoviesContract.TrailerEntry.CONTENT_URI,
+                    null,
+                    selection,
+                    new String[]{movie_id},
+                    null
+            );
+        }else if (id == REVIEWS_ID) {
 
-                String selection = MoviesContract.ReviewEntry.COL_MOVIE_ID + " = ?";
+            String selection = MoviesContract.ReviewEntry.COL_MOVIE_ID + " = ?";
 
-                return new CursorLoader(getActivity(),
-                        MoviesContract.ReviewEntry.CONTENT_URI,
-                        null,
-                        selection,
-                        new String[]{movie_id},
-                        null
-                );
-            }
+            return new CursorLoader(getActivity(),
+                    MoviesContract.ReviewEntry.CONTENT_URI,
+                    null,
+                    selection,
+                    new String[]{movie_id},
+                    null
+            );
+        }
 
         return null;
     }
@@ -269,6 +308,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             movie_genre_name.setText(cursor.getString(9));
             movie_popularity.setText(String.valueOf(Utility.formatPopularity(cursor.getString(5))));
             movie_language.setText(cursor.getString(10));
+
+            mMovieString = cursor.getString(6) + "\n" + Utility.TMDB_WEB_URL + cursor.getString(1);
 
             Bitmap bitmap = ((BitmapDrawable)poster_imageView.getDrawable()).getBitmap();;
 
@@ -309,12 +350,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-           if (loader.getId() == TRAILERS_ID){
-                trailerAdapter.swapCursor(null);
-            }
-            if (loader.getId() == REVIEWS_ID){
-                reviewAdapter.swapCursor(null);
-            }
+        if (loader.getId() == TRAILERS_ID){
+            trailerAdapter.swapCursor(null);
+        }
+        if (loader.getId() == REVIEWS_ID){
+            reviewAdapter.swapCursor(null);
+        }
     }
 
     public void onSortChange() {

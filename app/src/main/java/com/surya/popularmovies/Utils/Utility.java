@@ -28,6 +28,7 @@ public class Utility {
     public static final String END_IMG_URL = "/0.jpg";
     public static final String YOUTUBE_URL = "http://youtube.com/watch?v=";
     public static final String MOVIE_POSITION = "position";
+    public static final String TMDB_WEB_URL = "https://www.themoviedb.org/movie/";
 
     public static int formatPopularity(String popularity) {
         return (int) Math.round(Double.valueOf(popularity));

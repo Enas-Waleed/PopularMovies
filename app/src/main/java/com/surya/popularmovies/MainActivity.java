@@ -1,14 +1,22 @@
 package com.surya.popularmovies;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.surya.popularmovies.Utils.Utility;
+import com.surya.popularmovies.data.MoviesContract;
+import com.surya.popularmovies.data.MoviesDBHelper;
 
 public class MainActivity extends AppCompatActivity implements MoviesFragment.mMovieClickListener {
 
@@ -25,12 +33,15 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.mM
         setSupportActionBar(toolbar);
 
         mSortOrder = Utility.getSortOrder(this);
+//        Log.e(LOG_TAG,"OnCreate");
 
         if (findViewById(R.id.movie_detail_container) != null){
 
             mTwoPane = true;
+//            Log.e(LOG_TAG,"two pane");
 
             if (savedInstanceState == null){
+//                Log.e(LOG_TAG,"saved instance null");
 
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -76,8 +87,11 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.mM
 
             if (df != null){
 
+                Log.e(LOG_TAG,"sort chnnnnn");
                 df.onSortChange();
 
+            }else {
+                Log.e(LOG_TAG,"sort not changed");
             }
 
             mSortOrder = sortOrder;

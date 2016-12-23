@@ -165,6 +165,7 @@
 
 
             <TextView
+                android:text="@string/popularity"
                 android:layout_width="64dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -180,6 +181,7 @@
 
 
             <TextView
+                android:text="@string/language"
                 android:layout_width="64dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"

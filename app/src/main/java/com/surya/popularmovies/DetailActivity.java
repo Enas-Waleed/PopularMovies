@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.surya.popularmovies.Utils.Utility;
 
@@ -37,7 +39,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         if (getSupportActionBar() != null)
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -53,7 +55,6 @@ public class DetailActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }

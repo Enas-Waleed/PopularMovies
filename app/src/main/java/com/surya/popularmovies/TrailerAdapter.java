@@ -2,10 +2,13 @@ package com.surya.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,7 +66,7 @@ public class TrailerAdapter extends CursorRecyclerViewAdapter<TrailerAdapter.Vie
         TextView mTitle;
         ImageView mPosterImage;
 
-         ViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mPosterImage = (ImageView)itemView.findViewById(R.id.list_item_trailer_poster);

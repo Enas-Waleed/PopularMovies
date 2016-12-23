@@ -6,10 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
-
 import com.surya.popularmovies.Utils.Utility;
 import com.surya.popularmovies.data.MoviesContract;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +16,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Vector;
-
 import static com.surya.popularmovies.Utils.Utility.makeHttpRequest;
 
 /**
@@ -54,7 +51,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
         final String API_KEY = "api_key";
         Uri builtUri = Uri.parse(Utility.TMDB_BASE_URL).buildUpon()
                 .appendPath(sortOrder)
-                .appendQueryParameter(API_KEY, BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(API_KEY,BuildConfig.TMDB_API_KEY)
                 .build();
 
         if (sortOrder.equals(mContext.getString(R.string.pref_sort_favourite))){
@@ -166,11 +163,14 @@ public class MovieTaskLoader extends AsyncTaskLoader {
                 ContentValues[] cvArray = new ContentValues[cvVector.size()];
                 cvVector.toArray(cvArray);
                 inserted = getContext().getContentResolver().bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, cvArray);
+
+//                Log.e("xxx","inserted using cp" + inserted);
+
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-      return null;
+        return null;
     }
 }
