@@ -192,4 +192,9 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateMovieList();
+    }
 }
