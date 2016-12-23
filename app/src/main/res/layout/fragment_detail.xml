@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/backdrop_poster"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="@dimen/image_width"
             android:scaleType="centerCrop"
             android:contentDescription="@string/imageview" />
 
@@ -25,12 +25,12 @@
 
         <ImageView
             android:id="@+id/poster"
-            android:layout_width="130dp"
-            android:layout_height="180dp"
+            android:layout_width="@dimen/poster_image_width"
+            android:layout_height="@dimen/poster_image_height"
             android:layout_below="@+id/backdrop_poster"
             android:layout_marginTop="-24dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginLeft="@dimen/margin_sixteen"
+            android:layout_marginStart="@dimen/margin_sixteen"
             android:scaleType="fitXY"
             android:contentDescription="@string/imageview" />
 
@@ -39,9 +39,9 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/poster"
             android:layout_toEndOf="@+id/poster"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginLeft="@dimen/margin_sixteen"
+            android:layout_marginStart="@dimen/margin_sixteen"
+            android:layout_marginTop="@dimen/poster_marginTop"
             android:id="@+id/movieName"
             android:layout_below="@+id/backdrop_poster"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -51,9 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/poster"
             android:layout_toEndOf="@+id/poster"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="@dimen/margin_sixteen"
+            android:layout_marginStart="@dimen/margin_sixteen"
+            android:layout_marginTop="@dimen/margin_eight"
             android:id="@+id/movie_release"
             android:layout_below="@+id/movieName"/>
 
@@ -61,12 +61,12 @@
         <Button
             android:id="@+id/fav_button"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/button_height"
             android:layout_below="@+id/poster"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginTop="@dimen/margin_sixteen"
+            android:layout_marginLeft="@dimen/margin_sixteen"
+            android:layout_marginStart="@dimen/margin_sixteen"
+            android:layout_marginRight="@dimen/margin_sixteen"
             android:textSize="12sp"
             android:layout_centerHorizontal="true"
             android:textColor="@android:color/white"
@@ -74,10 +74,7 @@
 
         <View
             android:id="@+id/view1"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#bdbdbd"
-            android:layout_margin="8dp"
+            style="@style/dividerStyle"
             android:layout_below="@+id/fav_button"/>
 
         <RelativeLayout
@@ -85,49 +82,49 @@
             android:layout_below="@+id/view1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/margin_sixteen"
             android:gravity="center_horizontal">
 
             <TextView
                 android:id="@+id/movie_rating"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="@dimen/circle_dimensions"
+                android:layout_height="@dimen/circle_dimensions"
                 android:textColor="@android:color/white"
                 android:textAlignment="center"
                 android:gravity="center_vertical"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginRight="@dimen/margin_sixteen"
+                android:layout_marginEnd="@dimen/margin_sixteen"
                 android:background="@drawable/circle" />
 
             <ImageView
                 android:id="@+id/movie_genre_image"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="@dimen/circle_dimensions"
+                android:layout_height="@dimen/circle_dimensions"
                 android:layout_toRightOf="@+id/movie_rating"
                 android:layout_toEndOf="@+id/movie_rating"
                 android:textAlignment="center"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/circle"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/margin_sixteen"
                 android:src="@drawable/ic_genre"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="@dimen/margin_sixteen"
                 android:contentDescription="@string/imageview" />
             <TextView
                 android:id="@+id/movie_popularity"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="@dimen/circle_dimensions"
+                android:layout_height="@dimen/circle_dimensions"
                 android:layout_toEndOf="@+id/movie_genre_image"
                 android:textColor="@android:color/white"
                 android:textAlignment="center"
                 android:gravity="center_vertical"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginRight="@dimen/margin_sixteen"
+                android:layout_marginEnd="@dimen/margin_sixteen"
                 android:background="@drawable/circle"
                 android:layout_toRightOf="@+id/movie_genre_image" />
             <TextView
                 android:id="@+id/movie_language"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="@dimen/circle_dimensions"
+                android:layout_height="@dimen/circle_dimensions"
                 android:layout_toRightOf="@+id/movie_popularity"
                 android:layout_toEndOf="@+id/movie_popularity"
                 android:textColor="@android:color/white"
@@ -137,12 +134,12 @@
                 android:background="@drawable/circle"/>
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="@dimen/circle_dimensions"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_eight"
+                android:layout_marginRight="@dimen/margin_sixteen"
+                android:layout_marginEnd="@dimen/margin_sixteen"
                 android:id="@+id/movie_rating_textView"
                 android:gravity="center"
                 android:layout_below="@+id/movie_rating"
@@ -150,9 +147,9 @@
                 android:layout_alignStart="@+id/movie_rating" />
 
             <TextView
-                android:layout_width="64dp"
+                android:layout_width="@dimen/circle_dimensions"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_eight"
                 android:textSize="12sp"
                 android:layout_toRightOf="@+id/movie_rating_textView"
                 android:layout_toEndOf="@+id/movie_rating_textView"
@@ -166,13 +163,13 @@
 
             <TextView
                 android:text="@string/popularity"
-                android:layout_width="64dp"
+                android:layout_width="@dimen/circle_dimensions"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="@dimen/circle_dimensions"
                 android:textSize="12sp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/margin_sixteen"
                 android:textAlignment="center"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_eight"
                 android:id="@+id/movie_popularity_textView"
                 android:layout_toRightOf="@+id/movie_genre_textView"
                 android:layout_toEndOf="@+id/movie_genre_textView"
@@ -182,12 +179,12 @@
 
             <TextView
                 android:text="@string/language"
-                android:layout_width="64dp"
+                android:layout_width="@dimen/circle_dimensions"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="@dimen/margin_sixteen"
                 android:textSize="12sp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/margin_sixteen"
+                android:layout_marginTop="@dimen/margin_eight"
                 android:layout_toRightOf="@+id/movie_popularity_textView"
                 android:layout_toEndOf="@+id/movie_popularity_textView"
                 android:id="@+id/movie_language_textView"
@@ -199,10 +196,7 @@
 
         <View
             android:id="@+id/view2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#bdbdbd"
-            android:layout_margin="8dp"
+            style="@style/dividerStyle"
             android:layout_below="@+id/linear_layout"/>
 
         <TextView
@@ -210,8 +204,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/overview"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginRight="@dimen/margin_sixteen"
+            android:layout_marginLeft="@dimen/margin_sixteen"
             android:layout_below="@+id/view2"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
@@ -221,7 +215,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/overviewHeading_textView"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/margin_sixteen"
             android:textSize="16sp"/>
 
 
@@ -232,9 +226,9 @@
             android:layout_below="@+id/movie_overview"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:text="@string/trailers"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"/>
+            android:layout_marginBottom="@dimen/margin_sixteen"
+            android:layout_marginLeft="@dimen/margin_sixteen"
+            android:layout_marginRight="@dimen/margin_sixteen"/>
 
 
         <android.support.v7.widget.RecyclerView
@@ -242,11 +236,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/trailer_heading"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="16dp"
-            android:scrollbarSize="4dp"
+            android:layout_marginLeft="@dimen/margin_sixteen"
+            android:layout_marginRight="@dimen/margin_sixteen"
+            android:layout_marginTop="@dimen/margin_four"
+            android:layout_marginBottom="@dimen/margin_sixteen"
+            android:scrollbarSize="@dimen/margin_four"
             android:scrollbarStyle="outsideInset"
             android:scrollbars="horizontal"/>
 
@@ -258,14 +252,14 @@
             android:layout_below="@+id/trailer_recyclerview"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:text="@string/reviews"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"/>
+            android:layout_marginLeft="@dimen/margin_sixteen"
+            android:layout_marginRight="@dimen/margin_sixteen"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/review_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/margin_sixteen"
             android:layout_below="@+id/review_heading"/>
 
     </RelativeLayout>

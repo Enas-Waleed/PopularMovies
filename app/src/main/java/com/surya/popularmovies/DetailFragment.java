@@ -61,7 +61,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TrailerAdapter trailerAdapter;
     private ReviewAdapter reviewAdapter;
     RelativeLayout relativeLayout;
-    private ShareActionProvider mShareActionProvider;
     private String mMovieString;
 
     public DetailFragment() {
@@ -157,7 +156,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         MenuItem menuItem = menu.findItem(R.id.action_share);
 
         // Get the provider and hold onto it to set/change the share intent.
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
         // If onLoadFinished happens before this, we can go ahead and set the share intent now.
         if (mMovieString != null) {
