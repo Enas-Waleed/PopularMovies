@@ -1,18 +1,15 @@
 package com.surya.popularmovies;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,21 +23,23 @@ import com.surya.popularmovies.data.MoviesContract;
  */
 public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemClickListener ,LoaderManager.LoaderCallbacks<Cursor>{
 
+    private static final int CURSOR_ID = 1;
+    private static final int MOVIE_TASK_LOADER = 0;
+    private final String LOG_TAG = "MainFragment";
+
     MoviesAdapter mAdapter;
 
     RecyclerView recyclerView;
 
-    private OnMovieSelectedListener mCallback;
+    private int mPosition;
 
     private static String lastSortingOrder = "dummy";
 
+    public interface mMovieClickListener{
 
-    public interface OnMovieSelectedListener{
-
-        public void onMovieSelected(String movie_id);
+        public void OnItemClick(String movie_id);
 
     }
-
 
     public MoviesFragment() {
     }
@@ -49,60 +48,41 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null ||!savedInstanceState.containsKey(Utility.MOVIES_ARRAY)){
+        if (savedInstanceState == null || !savedInstanceState.containsKey(Utility.MOVIE_POSITION)){
              updateMovieList();
-             Log.e("xxx","saved instance null");
-        }else {
-             Log.e("xxx","saved instance not ::: null");
+//             Log.e(LOG_TAG,"saved instance null");
         }
 
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mCallback = (OnMovieSelectedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnMovieSelectedListener");
-        }
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+
+        getLoaderManager().initLoader(CURSOR_ID,null,this);
+
+        super.onActivityCreated(savedInstanceState);
     }
 
-    private void updateMovieList() {
-
-        getLoaderManager().initLoader(0,null,this).forceLoad();
-
-        getLoaderManager().initLoader(1,null,this);
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-
-
-//        outState.putInt(Utility.MOVIE_POSITION,recyclerView.getVerticalScrollbarPosition());
+        outState.putInt(Utility.MOVIE_POSITION,mPosition);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-        Log.e("XXX","onCreateView");
+        if (savedInstanceState != null){
 
-        GridLayoutManager layoutManager;
+            mPosition = savedInstanceState.getInt(Utility.MOVIE_POSITION);
 
-        if (getResources().getConfiguration().orientation == 1) {
-            layoutManager = new GridLayoutManager(getActivity(), 2);
-        }else{
-            layoutManager = new GridLayoutManager(getActivity(), 4);
         }
-        recyclerView.setLayoutManager(layoutManager);
 
         mAdapter = new MoviesAdapter(getActivity(),0,this,null);
 
@@ -120,44 +100,18 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         String sortOrder = Utility.getSortOrder(getActivity());
 
         if (!lastSortingOrder.equals(sortOrder)){
-          lastSortingOrder = sortOrder;
-            updateMovieList();
+            onSortChange();
+            lastSortingOrder = sortOrder;
+            mPosition = 0;
         }
 
-
-    }
-
-
-    @Override
-    public void onListItemClick(int position) {
-
-        Cursor cursor = mAdapter.getCursor();
-
-        cursor.moveToPosition(position);
-
-//        ((OnMovieSelectedListener)getActivity()).onMovieSelected(cursor.getString(1));
-
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
-
-        intent.putExtra(Utility.MOVIE_ID,cursor.getString(1));
-
-        startActivity(intent);
-
-
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getLoaderManager().restartLoader(1,null,this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        if (id == 0)
-            return new MovieTaskLoader(getActivity(),Utility.getSortOrder(getActivity()));
+        if (id == MOVIE_TASK_LOADER)
+            return new MovieTaskLoader(getActivity(), Utility.getSortOrder(getActivity()));
         else {
 
             String selection = MoviesContract.MoviesEntry.COL_SORT + " = ?" ;
@@ -173,8 +127,11 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        if (loader.getId() == 1) {
+        //scroll only when sort order is same
+        if (mPosition != 0) {
+            recyclerView.smoothScrollToPosition(mPosition);
+        }
+        if (loader.getId() == CURSOR_ID) {
             mAdapter.swapCursor(data);
         }
     }
@@ -182,7 +139,55 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-        mAdapter.swapCursor(null);
+        if (loader.getId() == CURSOR_ID)
+            mAdapter.swapCursor(null);
+
+    }
+
+    public void setLayout(boolean mTwoPane) {
+        if (mTwoPane){
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+            recyclerView.setLayoutManager(linearLayoutManager);
+
+        }else {
+
+            GridLayoutManager layoutManager;
+            if (getResources().getConfiguration().orientation == 1) {
+                layoutManager = new GridLayoutManager(getActivity(), 2);
+            } else {
+                layoutManager = new GridLayoutManager(getActivity(), 4);
+            }
+            recyclerView.setLayoutManager(layoutManager);
+        }
+    }
+
+    @Override
+    public void onListItemClick(int position) {
+
+        Cursor cursor = mAdapter.getCursor();
+
+        cursor.moveToPosition(position);
+
+        mPosition = position;
+
+        ((mMovieClickListener)getActivity()).OnItemClick(cursor.getString(1));
+
+
+    }
+
+    private void updateMovieList() {
+
+        getLoaderManager().initLoader(MOVIE_TASK_LOADER,null,this).forceLoad();
+
+    }
+
+
+    public void onSortChange() {
+
+        updateMovieList();
+        getLoaderManager().restartLoader(CURSOR_ID,null,this).forceLoad();
 
     }
 

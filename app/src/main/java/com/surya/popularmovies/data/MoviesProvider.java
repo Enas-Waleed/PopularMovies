@@ -2,7 +2,6 @@ package com.surya.popularmovies.data;
 
 import android.annotation.TargetApi;
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -27,9 +26,9 @@ public class MoviesProvider extends ContentProvider {
 
     static {
 
-        uriMatcher.addURI(MoviesContract.CONTENT_AUTHORITY,MoviesContract.PATH_MOVIES,MOVIES);
-        uriMatcher.addURI(MoviesContract.CONTENT_AUTHORITY,MoviesContract.PATH_TRAILERS,TRAILERS);
-        uriMatcher.addURI(MoviesContract.CONTENT_AUTHORITY,MoviesContract.PATH_REVIEWS,REVIEWS);
+        uriMatcher.addURI(MoviesContract.CONTENT_AUTHORITY, MoviesContract.PATH_MOVIES,MOVIES);
+        uriMatcher.addURI(MoviesContract.CONTENT_AUTHORITY, MoviesContract.PATH_TRAILERS,TRAILERS);
+        uriMatcher.addURI(MoviesContract.CONTENT_AUTHORITY, MoviesContract.PATH_REVIEWS,REVIEWS);
 
 
     }
@@ -50,22 +49,20 @@ public class MoviesProvider extends ContentProvider {
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-
         Cursor retCursor = null;
 
         switch (uriMatcher.match(uri)){
 
 
             case MOVIES:
-                        retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME,
-                                        projection,
+                        retCursor = db.query(MoviesContract.MoviesEntry.TABLE_NAME
+                                        ,projection,
                                         selection,
                                         selectionArgs,
                                         null,
                                         null,
                                         null);
 
-                Log.e("xxx","querying movies  " + retCursor.getCount());
                         break;
 
             case TRAILERS:
@@ -78,7 +75,6 @@ public class MoviesProvider extends ContentProvider {
                                         null);
 
 
-                Log.e("xxx","querying trailers  " + retCursor.getCount());
                         break;
 
             case REVIEWS:
@@ -91,14 +87,12 @@ public class MoviesProvider extends ContentProvider {
                                         null);
 
 
-                Log.e("xxx","querying reviews  " + retCursor.getCount());
-                        break;
             default:
-                Log.e("xxx","Unsupported uri " + uri);
-
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
-
+        if (retCursor != null) {
+            retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return retCursor;
     }
 
@@ -112,15 +106,13 @@ public class MoviesProvider extends ContentProvider {
             // Student: Uncomment and fill out these two cases
             case MOVIES:
                 return MoviesContract.MoviesEntry.CONTENT_TYPE;
-
             case TRAILERS:
                 return MoviesContract.TrailerEntry.CONTENT_TYPE;
             case REVIEWS:
-                return MoviesContract.TrailerEntry.CONTENT_TYPE;
+                return MoviesContract.ReviewEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-
 
     }
 
@@ -161,9 +153,11 @@ public class MoviesProvider extends ContentProvider {
 
             case REVIEWS:
 
+                rowId = db.insert(MoviesContract.ReviewEntry.TABLE_NAME,null,values);
+
                 if (rowId > 0){
 
-                    contentUri = MoviesContract.TrailerEntry.buildTrailers(rowId);
+                    contentUri = MoviesContract.ReviewEntry.buildReviews(rowId);
 
                 }
 
@@ -184,8 +178,6 @@ public class MoviesProvider extends ContentProvider {
         if (uriMatcher.match(uri) == MOVIES){
 
             int rowId = db.delete(MoviesContract.MoviesEntry.TABLE_NAME,selection,selectionArgs);
-
-            Log.e("XXX"," deleted in cp " + rowId);
 
             getContext().getContentResolver().notifyChange(uri,null);
             return rowId;
@@ -262,14 +254,12 @@ public class MoviesProvider extends ContentProvider {
                 break;
             default:
                 rowId = -1;
-                Log.e("xxx","Unsupported uri " + uri);
                 return super.bulkInsert(uri, values);
         }
         getContext().getContentResolver().notifyChange(uri,null);
         return count;
-
-
     }
+
     @Override
     @TargetApi(11)
     public void shutdown() {

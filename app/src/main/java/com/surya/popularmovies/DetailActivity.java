@@ -4,36 +4,37 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.surya.popularmovies.Utils.Utility;
 
 public class DetailActivity extends AppCompatActivity {
+
+    private final String LOG_TAG = DetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
-        String movieId = getIntent().getStringExtra(Utility.MOVIE_ID);
-
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
 
             Bundle arguments = new Bundle();
 
-            arguments.putString(Utility.MOVIE_ID,movieId);
+            arguments.putString(Utility.MOVIE_ID,getIntent().getStringExtra(Utility.MOVIE_ID));
 
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.movie_detail_container,new DetailFragment())
+            DetailFragment fragment = new DetailFragment();
+
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.movie_detail_container, fragment)
                     .commit();
         }
-
 
         if (getSupportActionBar() != null)
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

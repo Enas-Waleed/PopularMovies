@@ -2,7 +2,6 @@ package com.surya.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,7 @@ public class ReviewAdapter extends CursorRecyclerViewAdapter<ReviewAdapter.ViewH
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
 
 
-        DatabaseUtils.dumpCursor(cursor);
+//        DatabaseUtils.dumpCursor(cursor);
 
         holder.mUserName.setText(cursor.getString(2));
         holder.mContent.setText(cursor.getString(3));

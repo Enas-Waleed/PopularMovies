@@ -2,10 +2,8 @@ package com.surya.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +13,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.surya.popularmovies.Utils.Utility;
-import com.surya.popularmovies.data.MoviesContract;
-
-import java.util.List;
 
 /**
  * Created by Surya on 04-12-2016.
  */
 
-public class MoviesAdapter extends CursorRecyclerViewAdapter<MoviesAdapter.ViewHolder>{
+public class MoviesAdapter extends CursorRecyclerViewAdapter<MoviesAdapter.ViewHolder> {
 
     private Context mContext;
     private int id;
@@ -56,7 +51,7 @@ public class MoviesAdapter extends CursorRecyclerViewAdapter<MoviesAdapter.ViewH
             cardView = (CardView)view.findViewById(R.id.cardView);
 
             if (id == 1)
-                    cardView.getLayoutParams().width = 250;
+                cardView.getLayoutParams().width = 250;
             else {
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 layoutParams.setMargins(8,8,8,8);
@@ -93,7 +88,7 @@ public class MoviesAdapter extends CursorRecyclerViewAdapter<MoviesAdapter.ViewH
     @Override
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
 
-        DatabaseUtils.dumpCursor(cursor);
+//        DatabaseUtils.dumpCursor(cursor);
 
         (holder.mRatingView).setText(cursor.getString(COL_VOTE_AVERAGE) + "/10");
 
@@ -106,13 +101,10 @@ public class MoviesAdapter extends CursorRecyclerViewAdapter<MoviesAdapter.ViewH
         holder.mPopularityView.setText(String.valueOf(rating));
         holder.mReleaseView.setText(year[0]);
 
-        Picasso.with(mContext).load(Utility.TMDB_POSTER_URL + cursor.getString(COL_POSTER_PATH)).into(holder.posterView);
-
-
-        /*Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_RELEASE_DATE) + "release date");
-        Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_VOTE_AVERAGE) + "vote average");
-        Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_POPULARITY) + "popu");
-        Log.e("XXX", cursor.getColumnIndex(MoviesContract.MoviesEntry.COL_POSTER_PATH) + "postrer");*/
+        Picasso.with(mContext)
+                .load(Utility.TMDB_POSTER_URL + cursor.getString(COL_POSTER_PATH))
+                .placeholder(R.drawable.dummy)
+                .into(holder.posterView);
 
     }
 

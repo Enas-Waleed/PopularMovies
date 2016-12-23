@@ -23,13 +23,11 @@ public class Utility {
 
     public static final String TMDB_POSTER_URL = "https://image.tmdb.org/t/p/w342/";
     public static final String TMDB_BACKDROP_POSTER_URL = "https://image.tmdb.org/t/p/w780/";
-    public static final String MOVIES_OBJECT = "movies_object";
-    public static final String MOVIES_ARRAY = "movies_array";
     public static final String MOVIE_ID = "movie_id";
     public static final String YOUTUBE_IMG_URL = "http://img.youtube.com/vi/";
     public static final String END_IMG_URL = "/0.jpg";
     public static final String YOUTUBE_URL = "http://youtube.com/watch?v=";
-    public static final java.lang.String MOVIE_POSITION = "position";
+    public static final String MOVIE_POSITION = "position";
 
     public static int formatPopularity(String popularity) {
         return (int) Math.round(Double.valueOf(popularity));
@@ -145,7 +143,6 @@ public class Utility {
             line = reader.readLine();
         }
 
-//        Log.e(LOG_TAG,output.toString());
         return output.toString();
     }
 

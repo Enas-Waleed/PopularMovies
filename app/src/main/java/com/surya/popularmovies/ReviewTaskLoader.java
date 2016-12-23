@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import com.surya.popularmovies.MoviesModel;
 import com.surya.popularmovies.Utils.Utility;
 import com.surya.popularmovies.data.MoviesContract;
 
@@ -27,10 +26,9 @@ import static com.surya.popularmovies.Utils.Utility.makeHttpRequest;
  * Created by Surya on 16-12-2016.
  */
 
-public class ReviewTaskLoader extends AsyncTaskLoader{
+public class ReviewTaskLoader extends AsyncTaskLoader {
     private static final String LOG_TAG = ReviewTaskLoader.class.getSimpleName();
 
-//    private MoviesModel
     private String id;
 
     public ReviewTaskLoader(Context context, String id) {
@@ -53,10 +51,9 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
         String TRAILER_REVIEW = "videos,reviews";
         Uri builtUri = Uri.parse(Utility.TMDB_BASE_URL).buildUpon()
                 .appendPath(id)
-                .appendQueryParameter(API_KEY,BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(API_KEY, BuildConfig.TMDB_API_KEY)
                 .appendQueryParameter(APPEND_PATH,TRAILER_REVIEW)
                 .build();
-
 
         //create a url object
         try {
@@ -75,7 +72,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
 
         extractFromJson(jsonResponse);
 
-//        Log.e("xxxx",jsonResponse);
         return null;
     }
 
@@ -89,8 +85,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
         final String CONTENT = "content";
         final String LINK = "url";
         final String NAME = "name";
-
-        List<MoviesModel> results = new ArrayList<>();
 
         if (jsonResponse == null)
             return ;
@@ -112,7 +106,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
 
                 String trailerId = trailersArray.getJSONObject(p).getString(KEY);
                 String trailerName = trailersArray.getJSONObject(p).getString(NAME);
-                Log.e("a",trailerName + trailerId);
                 trailerValues.put(MoviesContract.TrailerEntry.COL_MOVIE_ID,id);
                 trailerValues.put(MoviesContract.TrailerEntry.COL__TRAILER_LINK,trailerId);
                 trailerValues.put(MoviesContract.TrailerEntry.COL_TRAILER_NAME,trailerName);
@@ -126,7 +119,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
                 cVVector.toArray(cvArray);
                 inserted = getContext().getContentResolver().bulkInsert(MoviesContract.TrailerEntry.CONTENT_URI, cvArray);
 
-                Log.e("xxx","bulk insert trailers " + inserted);
             }
 
             //fetch reviews
@@ -136,7 +128,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
             JSONArray reviewsArray = reviewsObject.getJSONArray(RESULTS);
 
             Vector<ContentValues> reviewVector = new Vector<>(reviewsArray.length());
-
 
             for (int q = 0; q < reviewsArray.length(); q++) {
 
@@ -158,8 +149,6 @@ public class ReviewTaskLoader extends AsyncTaskLoader{
                 ContentValues[] cvArray = new ContentValues[reviewVector.size()];
                 reviewVector.toArray(cvArray);
                 inserted = getContext().getContentResolver().bulkInsert(MoviesContract.ReviewEntry.CONTENT_URI, cvArray);
-
-                Log.e("xxx","bulk insert reviews " + inserted);
             }
 
         } catch (JSONException e) {

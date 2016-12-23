@@ -1,30 +1,21 @@
 package com.surya.popularmovies;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.surya.popularmovies.Utils.TestUtlis;
 import com.surya.popularmovies.Utils.Utility;
-import com.surya.popularmovies.data.MoviesContract;
-import com.surya.popularmovies.data.MoviesDBHelper;
 
-public class MainActivity extends AppCompatActivity implements MoviesFragment.OnMovieSelectedListener{
+public class MainActivity extends AppCompatActivity implements MoviesFragment.mMovieClickListener {
 
-    private String DETAIL_FRAGMENT_TAG = "DETAIL_FRAGMENT_TAG";
-    boolean mTwoPane;
+    private static final String DF_TAG = "DFTAG";
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private boolean mTwoPane;
+    private String mSortOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +24,9 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mSortOrder = Utility.getSortOrder(this);
 
         if (findViewById(R.id.movie_detail_container) != null){
-
 
             mTwoPane = true;
 
@@ -43,15 +34,55 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.On
 
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.movie_detail_container,new DetailFragment(),DETAIL_FRAGMENT_TAG)
+                        .replace(R.id.movie_detail_container,new DetailFragment(),DF_TAG)
                         .commit();
 
             }
 
-        }else{
+        }else {
             mTwoPane = false;
         }
 
+        MoviesFragment mf = (MoviesFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+
+        if (mf != null){
+
+            mf.setLayout(mTwoPane);
+
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String sortOrder = Utility.getSortOrder(this);
+
+        Log.e(LOG_TAG,":onresume.....");
+        if (mSortOrder != null && !mSortOrder.equals(sortOrder)){
+
+            Log.e(LOG_TAG,":onresume.....++++++");
+
+            MoviesFragment mf = (MoviesFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+
+            if (mf != null){
+
+                mf.onSortChange();
+
+            }
+
+            DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DF_TAG);
+
+            if (df != null){
+
+                df.onSortChange();
+
+            }
+
+            mSortOrder = sortOrder;
+
+        }
 
     }
 
@@ -81,33 +112,28 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.On
     }
 
     @Override
-    public void onMovieSelected(String movie_id) {
-
-        Log.e("Mainactivity",movie_id);
+    public void OnItemClick(String movie_id) {
 
         if (mTwoPane){
 
-            Bundle args = new Bundle();
+            Bundle bundle = new Bundle();
 
-            args.putString(Utility.MOVIE_ID,movie_id);
+            bundle.putString(Utility.MOVIE_ID,movie_id);
 
             DetailFragment fragment = new DetailFragment();
-            fragment.setArguments(args);
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail_container, fragment, DETAIL_FRAGMENT_TAG)
-                    .commit();
+            fragment.setArguments(bundle);
 
-        }else{
+            getSupportFragmentManager().beginTransaction().replace(R.id.movie_detail_container,fragment).commit();
+
+        }else {
 
             Intent intent = new Intent(this, DetailActivity.class);
 
-            intent.putExtra(Utility.MOVIE_ID,movie_id);
+            intent.putExtra(Utility.MOVIE_ID, movie_id);
 
             startActivity(intent);
-
         }
-
 
     }
 }

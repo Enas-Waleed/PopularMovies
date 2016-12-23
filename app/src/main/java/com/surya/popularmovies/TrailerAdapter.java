@@ -2,13 +2,10 @@ package com.surya.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +21,6 @@ public class TrailerAdapter extends CursorRecyclerViewAdapter<TrailerAdapter.Vie
     Context context;
 
     final private ListItemClickListener listItemClickListener;
-
 
     public interface ListItemClickListener{
         void onListItemClick(int position);
@@ -52,11 +48,13 @@ public class TrailerAdapter extends CursorRecyclerViewAdapter<TrailerAdapter.Vie
     public void onBindViewHolder(ViewHolder holder, Cursor cursor) {
 
 
-        DatabaseUtils.dumpCursor(cursor);
+//        DatabaseUtils.dumpCursor(cursor);
 
         holder.mTitle.setText(cursor.getString(2));
-        Log.e("xxxx",Utility.YOUTUBE_IMG_URL + cursor.getString(3) + Utility.END_IMG_URL);
-        Picasso.with(context).load(Utility.YOUTUBE_IMG_URL + cursor.getString(3) + Utility.END_IMG_URL).into(holder.mPosterImage);
+        Picasso.with(context)
+                .load(Utility.YOUTUBE_IMG_URL + cursor.getString(3) + Utility.END_IMG_URL)
+                .placeholder(R.drawable.dummy)
+                .into(holder.mPosterImage);
 
     }
 
@@ -65,7 +63,7 @@ public class TrailerAdapter extends CursorRecyclerViewAdapter<TrailerAdapter.Vie
         TextView mTitle;
         ImageView mPosterImage;
 
-        public ViewHolder(View itemView) {
+         ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mPosterImage = (ImageView)itemView.findViewById(R.id.list_item_trailer_poster);

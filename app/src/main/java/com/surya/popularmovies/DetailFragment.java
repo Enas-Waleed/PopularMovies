@@ -3,15 +3,14 @@ package com.surya.popularmovies;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -24,19 +23,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.surya.popularmovies.Utils.Utility;
 import com.surya.popularmovies.data.MoviesContract;
-import com.surya.popularmovies.data.MoviesDBHelper;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>,TrailerAdapter.ListItemClickListener{
+public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,TrailerAdapter.ListItemClickListener{
+
+
+    private final String LOG_TAG = "DetailFragment";
 
     private int CURSOR_ID = 3;
     private int REVIEWS_TASK_ID = 4;
@@ -55,6 +55,7 @@ public class DetailFragment extends Fragment implements
     String poster_path,backdrop_path;
     private TrailerAdapter trailerAdapter;
     private ReviewAdapter reviewAdapter;
+    RelativeLayout relativeLayout;
 
     public DetailFragment() {
     }
@@ -62,25 +63,32 @@ public class DetailFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(CURSOR_ID,null,this).forceLoad();
-        getLoaderManager().initLoader(REVIEWS_TASK_ID,null,this);
-        getLoaderManager().initLoader(TRAILERS_ID,null,this);
-        getLoaderManager().initLoader(REVIEWS_ID,null,this);
+
+        Log.e(LOG_TAG,"onActivity created");
+
+        if (movie_id != null) {
+            getLoaderManager().initLoader(CURSOR_ID, null, this).forceLoad();
+            getLoaderManager().initLoader(REVIEWS_TASK_ID, null, this);
+            getLoaderManager().initLoader(TRAILERS_ID, null, this);
+            getLoaderManager().initLoader(REVIEWS_ID, null, this);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+        relativeLayout = (RelativeLayout) rootView.findViewById(R.id.content_detail);
+
         Bundle arguments = getArguments();
-
-        if (arguments != null){
-
+        if(arguments != null) {
             movie_id = arguments.getString(Utility.MOVIE_ID);
-
+        }else{
+            relativeLayout.setVisibility(View.GONE);
         }
-
 
         backdrop_imageView = (ImageView)rootView.findViewById(R.id.backdrop_poster);
         poster_imageView = (ImageView)rootView.findViewById(R.id.poster);
@@ -106,7 +114,7 @@ public class DetailFragment extends Fragment implements
         RecyclerView trailer_recyclerView = (RecyclerView)rootView.findViewById(R.id.trailer_recyclerview);
 
         LinearLayoutManager reviewManager = new LinearLayoutManager(getActivity());
-        LinearLayoutManager trailerManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager trailerManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false);
 
         review_recyclerView.setLayoutManager(reviewManager);
         trailer_recyclerView.setLayoutManager(trailerManager);
@@ -144,8 +152,6 @@ public class DetailFragment extends Fragment implements
 
         if (cursor!=null)
         while (cursor.moveToNext()){
-            Log.e("xxxx",cursor.getString(1) + " pos " + cursor.getColumnCount() );
-
 
             if (cursor.getString(1).equals(getString(R.string.pref_sort_favourite))) {
 
@@ -156,13 +162,16 @@ public class DetailFragment extends Fragment implements
                 rowId = getActivity().getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI
                                                                     ,where,whereArgs);
 
-                Log.e("xxx",rowId + "deleted");
+//                Log.e("xxx",rowId + "deleted");
 
+
+                cursor.close();
                 return;
             }
             cursor.moveToNext();
 
         }
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(MoviesContract.MoviesEntry.COL_MOVIE_ID,movie_id);
         contentValues.put(MoviesContract.MoviesEntry.COL_POSTER_PATH,poster_path);
@@ -178,15 +187,14 @@ public class DetailFragment extends Fragment implements
         contentValues.put(MoviesContract.MoviesEntry.COL_SORT,getString(R.string.pref_sort_favourite));
         Uri uri = getActivity().getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI,contentValues);
 
-        Log.e("xxx",uri + "inserted");
+//        Log.e("xxx",uri + "inserted");
 
-        cursor.close();
 
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.e("xxxx","oncreate loader");
+//        Log.e(LOG_TAG,"oncreate loader");
 
             if (id == REVIEWS_TASK_ID)
                 return new ReviewTaskLoader(getActivity(),movie_id);
@@ -239,6 +247,11 @@ public class DetailFragment extends Fragment implements
             poster_path = cursor.getString(2);
             backdrop_path = cursor.getString(7);
 
+            if (cursor.getString(12).equals(getString(R.string.pref_sort_favourite)))
+                favButton.setText(getString(R.string.remove_from_fav));
+            else
+                favButton.setText(getString(R.string.add_to_favourites));
+
             Picasso.with(getActivity())
                     .load(Utility.TMDB_BACKDROP_POSTER_URL + backdrop_path)
                     .placeholder(R.drawable.dummy)
@@ -278,8 +291,7 @@ public class DetailFragment extends Fragment implements
 
                 }
             });
-
-
+            relativeLayout.setVisibility(View.VISIBLE);
         }
         else{
             if (loader.getId() == TRAILERS_ID){
@@ -291,7 +303,6 @@ public class DetailFragment extends Fragment implements
 
 
         }
-
 
     }
 
@@ -306,13 +317,19 @@ public class DetailFragment extends Fragment implements
             }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void onSortChange() {
 
-        getLoaderManager().restartLoader(TRAILERS_ID,null,this);
-        getLoaderManager().restartLoader(REVIEWS_ID,null,this);
-        getLoaderManager().restartLoader(CURSOR_ID,null,this);
+        relativeLayout.setVisibility(View.GONE);
+
+        Log.e(LOG_TAG,"sort changed");
+
+        if (movie_id != null) {
+            getLoaderManager().restartLoader(CURSOR_ID, null, this).forceLoad();
+            getLoaderManager().restartLoader(REVIEWS_TASK_ID, null, this);
+            getLoaderManager().restartLoader(TRAILERS_ID, null, this);
+            getLoaderManager().restartLoader(REVIEWS_ID, null, this);
+        }
+
     }
 
     @Override
@@ -328,5 +345,6 @@ public class DetailFragment extends Fragment implements
         startActivity(intent);
 
     }
+
 }
 

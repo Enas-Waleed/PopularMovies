@@ -3,15 +3,12 @@ package com.surya.popularmovies;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import com.surya.popularmovies.Utils.Utility;
 import com.surya.popularmovies.data.MoviesContract;
-import com.surya.popularmovies.data.MoviesDBHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,8 +17,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import static com.surya.popularmovies.Utils.Utility.makeHttpRequest;
@@ -59,20 +54,12 @@ public class MovieTaskLoader extends AsyncTaskLoader {
         final String API_KEY = "api_key";
         Uri builtUri = Uri.parse(Utility.TMDB_BASE_URL).buildUpon()
                 .appendPath(sortOrder)
-                .appendQueryParameter(API_KEY,BuildConfig.TMDB_API_KEY)
+                .appendQueryParameter(API_KEY, BuildConfig.TMDB_API_KEY)
                 .build();
 
-
         if (sortOrder.equals(mContext.getString(R.string.pref_sort_favourite))){
-
-            List<MoviesModel> results = new ArrayList<>();
-
-//            Cursor cursor = mContext.getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
-//                                                                null,
-//                                                                )
             return null;
         }else {
-
             //create a url object
             try {
                 url = new URL(builtUri.toString());
@@ -108,7 +95,6 @@ public class MovieTaskLoader extends AsyncTaskLoader {
         final String LANGUAGE = "original_language";
         final String GENRE = "genre_ids";
 
-        Cursor cursor = null;
         if (jsonResponse == null)
             return null;
 
@@ -174,22 +160,17 @@ public class MovieTaskLoader extends AsyncTaskLoader {
 
             }
 
-
             int inserted = 0;
             // add to database
             if ( cvVector.size() > 0 ) {
                 ContentValues[] cvArray = new ContentValues[cvVector.size()];
                 cvVector.toArray(cvArray);
                 inserted = getContext().getContentResolver().bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, cvArray);
-
-                Log.e("xxx","inserted using cp" + inserted);
-
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//        cursor = mContext.getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,null,null,null,null);
-        return null;
+      return null;
     }
 }

@@ -38,49 +38,49 @@ public class MoviesModel implements Parcelable {
         this.genre = genre_id;
     }
 
-    public String getPoster_path() {
-        return poster_path;
-    }
-
-    public String getOverview() {
-        return overview;
-    }
-
-    public String getRelease_date() {
-        return release_date;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getBackdrop_path() {
-        return backdrop_path;
-    }
-
-    public String getPopularity() {
-        return popularity;
-    }
-
-    public String getVote_count() {
-        return vote_count;
-    }
-
-    public String getVote_average() {
-        return vote_average;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public String getGenre_id() {
-        return (genre);
-    }
+//    public String getPoster_path() {
+//        return poster_path;
+//    }
+//
+//    public String getOverview() {
+//        return overview;
+//    }
+//
+//    public String getRelease_date() {
+//        return release_date;
+//    }
+//
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public String getTitle() {
+//        return title;
+//    }
+//
+//    public String getBackdrop_path() {
+//        return backdrop_path;
+//    }
+//
+//    public String getPopularity() {
+//        return popularity;
+//    }
+//
+//    public String getVote_count() {
+//        return vote_count;
+//    }
+//
+//    public String getVote_average() {
+//        return vote_average;
+//    }
+//
+//    public String getLanguage() {
+//        return language;
+//    }
+//
+//    public String getGenre_id() {
+//        return (genre);
+//    }
 
     @Override
     public int describeContents() {

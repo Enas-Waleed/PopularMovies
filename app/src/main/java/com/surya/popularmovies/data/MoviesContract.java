@@ -124,11 +124,8 @@ public class MoviesContract {
 
         }
 
-
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REVIEWS;;
-
-
 
     }
 

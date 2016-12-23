@@ -13,7 +13,6 @@
             android:id="@+id/list_item_trailer_poster"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:src="@drawable/dummy"
             android:scaleType="centerCrop"
             android:contentDescription="@string/imageview" />
 

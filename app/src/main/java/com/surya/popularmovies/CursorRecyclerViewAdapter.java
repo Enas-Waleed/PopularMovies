@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 /**
  * Written by sam_chordas on 8/11/15.
@@ -30,7 +29,7 @@ extends RecyclerView.Adapter<VH>{
         if (mDataIsValid){
             mCursor.registerDataSetObserver(mDataSetObserver);
         }
-        Log.d(LOG_TAG, "in super");
+//        Log.d(LOG_TAG, "in super");
     }
 
     public Cursor getCursor(){
