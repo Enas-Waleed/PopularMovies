@@ -41,7 +41,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     public int getItemCount(){
         if(mDataIsValid && mCursor != null){
 
-//            Log.e("xxx",mCursor.getCount() + "count........");
+            Log.e("xxx",mCursor.getCount() + "count........");
 
             return mCursor.getCount();
         }

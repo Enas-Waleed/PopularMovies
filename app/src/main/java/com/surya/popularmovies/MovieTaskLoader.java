@@ -45,6 +45,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
     @Override
     public Cursor loadInBackground() {
 
+        Log.e(LOG_TAG,"load in background");
 
         URL url = null;
 
@@ -164,7 +165,7 @@ public class MovieTaskLoader extends AsyncTaskLoader {
                 cvVector.toArray(cvArray);
                 inserted = getContext().getContentResolver().bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, cvArray);
 
-//                Log.e("xxx","inserted using cp" + inserted);
+                Log.e(LOG_TAG,"inserted using cp" + inserted);
 
             }
 

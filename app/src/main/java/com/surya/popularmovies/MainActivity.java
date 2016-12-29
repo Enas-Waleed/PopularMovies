@@ -73,11 +73,12 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.mM
         Log.e(LOG_TAG,":onresume.....");
         if (mSortOrder != null && !mSortOrder.equals(sortOrder)){
 
-            Log.e(LOG_TAG,":onresume.....++++++");
 
             MoviesFragment mf = (MoviesFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_main);
 
             if (mf != null){
+
+                Log.e(LOG_TAG,":onresume.....++++++");
 
                 mf.onSortChange();
 
@@ -87,11 +88,7 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.mM
 
             if (df != null){
 
-                Log.e(LOG_TAG,"sort chnnnnn");
                 df.onSortChange();
-
-            }else {
-                Log.e(LOG_TAG,"sort not changed");
             }
 
             mSortOrder = sortOrder;

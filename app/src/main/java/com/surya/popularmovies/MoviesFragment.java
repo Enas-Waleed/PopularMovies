@@ -49,17 +49,24 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey(Utility.MOVIE_POSITION)){
-            updateMovieList();
-//             Log.e(LOG_TAG,"saved instance null");
-        }
+
+        Log.e(LOG_TAG,"OnCreate");
+
+//        if (savedInstanceState == null || !savedInstanceState.containsKey(Utility.MOVIE_POSITION)){
+//            updateMovieList();
+//        }
 
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
+
+        Log.e(LOG_TAG,"On Activity Created");
+
         getLoaderManager().initLoader(CURSOR_ID,null,this);
+
+        getLoaderManager().initLoader(MOVIE_TASK_LOADER,null,this).forceLoad();
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -98,6 +105,8 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     public void onStart() {
         super.onStart();
 
+        Log.e(LOG_TAG,"OnStart");
+
         String sortOrder = Utility.getSortOrder(getActivity());
 
         if (!lastSortingOrder.equals(sortOrder)){
@@ -113,7 +122,9 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
         if (id == MOVIE_TASK_LOADER)
             return new MovieTaskLoader(getActivity(),Utility.getSortOrder(getActivity()));
-        else {
+        else if (id == CURSOR_ID){
+
+            Log.e(LOG_TAG,"cursor created");
 
             String selection = MoviesContract.MoviesEntry.COL_SORT + " = ?" ;
 
@@ -124,6 +135,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
                     new String[]{Utility.getSortOrder(getActivity())},
                     null);
         }
+        return null;
     }
 
     @Override
@@ -132,15 +144,13 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         if (mPosition != 0) {
             recyclerView.smoothScrollToPosition(mPosition);
         }
-        if (loader.getId() == CURSOR_ID) {
+        if (loader.getId() == CURSOR_ID)
             mAdapter.swapCursor(data);
-        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-        if (loader.getId() == CURSOR_ID)
             mAdapter.swapCursor(null);
 
     }
@@ -178,23 +188,16 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
     }
 
-    private void updateMovieList() {
-
-        getLoaderManager().initLoader(MOVIE_TASK_LOADER,null,this).forceLoad();
-
-    }
-
-
     public void onSortChange() {
 
-        updateMovieList();
-        getLoaderManager().restartLoader(CURSOR_ID,null,this).forceLoad();
+        getLoaderManager().restartLoader(MOVIE_TASK_LOADER,null,this);
+        getLoaderManager().restartLoader(CURSOR_ID,null,this);
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateMovieList();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        updateMovieList();
+//    }
 }
