@@ -3,14 +3,17 @@ Udacity Project - 02,03
 
 **Popular Movies Stage-01 and Stage-02**
 
-#Overview :
+#Overview 
 
 Here is the fully functional app which is a part of *Android Developer Nanodegree Program from Udacity*.
 
 *Popular Movies* is an app which displays the movies fetched from TMDB Website.It shows the list of 20 movies.
 
-![Popular Movies](https://lh5.googleusercontent.com/qx2DrVVjH1lWS5mhbms1gkyAgzMK_88BvVgQ5QQugKE_xxHzYln8ebyCNJyeF3t8gUNw8eL3bR6-KVY=w1366-h613-rw)
-![Popular Movies](https://lh6.googleusercontent.com/7M_0i2D-83_pUKrujPscY_3NnXOhdvHZDxHBLuTu1W5LowO0Qqh-WSUwOSUMVFHQMvH6rTGAb2tW3UA=w1366-h613-rw)
+
+#Preview
+
+![](https://raw.githubusercontent.com/suryachintu/PopularMovies/master/app/assets/pop_tablet.png)
+![](https://raw.githubusercontent.com/suryachintu/PopularMovies/master/app/assets/pop.png)
 
 # Features
 Movies can be sorted according to the following
