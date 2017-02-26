@@ -46,6 +46,8 @@
     <string name="tmdb_user">TMDB User</string>
     <string name="remove_from_fav">Remove From Favourites</string>
     <string name="action_share">Share</string>
+    <string name="detail_transition">image_transition</string>
+    <string name="no_connection">No Internet Connection</string>
 
 
 </resources>

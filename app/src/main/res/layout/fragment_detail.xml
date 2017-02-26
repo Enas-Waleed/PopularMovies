@@ -32,6 +32,7 @@
             android:layout_marginLeft="@dimen/margin_sixteen"
             android:layout_marginStart="@dimen/margin_sixteen"
             android:scaleType="fitXY"
+            android:transitionName="@string/detail_transition"
             android:contentDescription="@string/imageview" />
 
         <TextView

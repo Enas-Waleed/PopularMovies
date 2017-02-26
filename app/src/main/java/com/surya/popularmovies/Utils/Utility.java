@@ -2,6 +2,8 @@ package com.surya.popularmovies.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import com.surya.popularmovies.R;
@@ -154,6 +156,16 @@ public class Utility {
         return prefs.getString(context.getString(R.string.pref_sort_key), context.getString(R.string.pref_sort_popular));
 
     }
+
+    static public boolean isNetworkAvailable(Context c) {
+        ConnectivityManager cm =
+                (ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
+
 
 
 }

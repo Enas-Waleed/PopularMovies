@@ -8,12 +8,17 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import com.surya.popularmovies.Utils.Utility;
 import com.surya.popularmovies.data.MoviesContract;
 import com.surya.popularmovies.data.MoviesDBHelper;
@@ -31,6 +36,11 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.mM
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (!Utility.isNetworkAvailable(this)){
+            Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
+        }
+
 
         mSortOrder = Utility.getSortOrder(this);
 //        Log.e(LOG_TAG,"OnCreate");
@@ -123,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.mM
     }
 
     @Override
-    public void OnItemClick(String movie_id) {
+    public void OnItemClick(String movie_id, MoviesAdapter.ViewHolder vh) {
 
         if (mTwoPane){
 
@@ -143,7 +153,16 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.mM
 
             intent.putExtra(Utility.MOVIE_ID, movie_id);
 
-            startActivity(intent);
+            ActivityOptionsCompat activityOptions =
+                    null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP && vh!=null) {
+                activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                        new Pair<View, String>(vh.posterView, vh.posterView.getTransitionName()));
+                ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
+            }
+            else
+                startActivity(intent);
+
         }
 
     }

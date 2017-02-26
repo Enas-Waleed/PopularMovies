@@ -37,7 +37,7 @@ public class MoviesAdapter extends CursorRecyclerViewAdapter<MoviesAdapter.ViewH
 
 
     public interface ListItemClickListener{
-        void onListItemClick(int position);
+        void onListItemClick(int position,ViewHolder vh);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -68,7 +68,7 @@ public class MoviesAdapter extends CursorRecyclerViewAdapter<MoviesAdapter.ViewH
         @Override
         public void onClick(View v) {
             int clickPosition = getAdapterPosition();
-            mOnClickListener.onListItemClick(clickPosition);
+            mOnClickListener.onListItemClick(clickPosition,this);
         }
     }
 

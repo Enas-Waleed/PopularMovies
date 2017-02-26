@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.surya.popularmovies.Utils.Utility;
 import com.surya.popularmovies.data.MoviesContract;
@@ -38,7 +39,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
     public interface mMovieClickListener{
 
-        public void OnItemClick(String movie_id);
+        public void OnItemClick(String movie_id, MoviesAdapter.ViewHolder vh);
 
     }
 
@@ -85,7 +86,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-
         if (savedInstanceState != null){
 
             mPosition = savedInstanceState.getInt(Utility.MOVIE_POSITION);
@@ -144,8 +144,9 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
         if (mPosition != 0) {
             recyclerView.smoothScrollToPosition(mPosition);
         }
-        if (loader.getId() == CURSOR_ID)
+        if (loader.getId() == CURSOR_ID) {
             mAdapter.swapCursor(data);
+        }
     }
 
     @Override
@@ -175,7 +176,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
     }
 
     @Override
-    public void onListItemClick(int position) {
+    public void onListItemClick(int position, MoviesAdapter.ViewHolder vh) {
 
         Cursor cursor = mAdapter.getCursor();
 
@@ -183,7 +184,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.ListItemCl
 
         mPosition = position;
 
-        ((mMovieClickListener)getActivity()).OnItemClick(cursor.getString(1));
+        ((mMovieClickListener)getActivity()).OnItemClick(cursor.getString(1),vh);
 
 
     }
